@@ -74,7 +74,7 @@ const ap = new APlayer({
       {
         name: "紅蓮の弓矢",
         artist: 'Linked Horizon',
-        url: 'http://m10.music.126.net/20200401045013/5065f5c7f18ce4e0e373716c728748fd/ymusic/f010/4927/b08e/e61080ec048decaf7f5d5aec10add2fa.mp3',
+        url: 'https://sharefs.yun.kugou.com/202004010513/92284554d8f5fcbecf96b38ea5110d13/G013/M04/06/03/rYYBAFUK15mAC2_uACRYgkGTTGw962.mp3',
         cover: 'http://p2.music.126.net/LaVbjh4z6z5D9b5MftfX1A==/109951163597676980.jpg?param=300x300',
         lrc: '/musics/hlngs.lrc'
       },
