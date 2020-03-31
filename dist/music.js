@@ -72,11 +72,25 @@ const ap = new APlayer({
         lrc: '/musics/DreamItPossible.lrc'
       },
       {
+        name: "紅蓮の弓矢",
+        artist: 'Linked Horizon',
+        url: 'http://m10.music.126.net/20200401045013/5065f5c7f18ce4e0e373716c728748fd/ymusic/f010/4927/b08e/e61080ec048decaf7f5d5aec10add2fa.mp3',
+        cover: 'http://p2.music.126.net/LaVbjh4z6z5D9b5MftfX1A==/109951163597676980.jpg?param=300x300',
+        lrc: '/musics/hlngs.lrc'
+      },
+      {
         name: "平凡之路",
         artist: '朴树',
         url: 'http://m10.music.126.net/20200401043548/04ab8c2a2c16b2f48d14288d159476f2/ymusic/fc6d/0a5c/db75/2b16355237283456b93e133c2d8ad6ef.mp3',
         cover: 'http://p2.music.126.net/W_5XiCv3rGS1-J7EXpHSCQ==/18885211718782327.jpg?param=300x300',
         lrc: '/musics/pfzl.lrc'
+      },
+      {
+        name: "In The End",
+        artist: 'Linkin Park',
+        url: 'http://m10.music.126.net/20200401044634/65696805985a115a5eff567c627c90f2/ymusic/9738/663e/7266/85d9aeedb1845faed53ea9aeb94ba85a.mp3',
+        cover: 'http://p2.music.126.net/mM5veAg4Grw6QJ-L2QMa0g==/5961552046309181.jpg?param=300x300',
+        lrc: '/musics/ite.lrc'
       }
     ]
 });
