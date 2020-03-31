@@ -15,13 +15,13 @@ const ap = new APlayer({
         cover: 'https://t1.picb.cc/uploads/2019/09/26/gxyvj7.th.jpg',
         lrc: '/musics/LoseYourself.lrc'
       },
-	  {
-		name: "Radioactive",
-        artist: 'Imagine Dragons',
-        url: 'http://fdfs.xmcdn.com/group19/M00/7E/B9/wKgJJleoUzui-GY_ABb4fPZlJws404.mp3',
-        cover: 'https://t1.picb.cc/uploads/2019/09/26/gx2eC6.th.jpg',
-        lrc: '/musics/Radioactive.lrc'
-	  },
+  	  {
+  		name: "Radioactive",
+          artist: 'Imagine Dragons',
+          url: 'http://fdfs.xmcdn.com/group19/M00/7E/B9/wKgJJleoUzui-GY_ABb4fPZlJws404.mp3',
+          cover: 'https://t1.picb.cc/uploads/2019/09/26/gx2eC6.th.jpg',
+          lrc: '/musics/Radioactive.lrc'
+  	  },
       {
         name: "Lemon",
         artist: '米津玄師',
@@ -74,7 +74,7 @@ const ap = new APlayer({
       {
         name: "紅蓮の弓矢",
         artist: 'Linked Horizon',
-        url: 'https://sharefs.yun.kugou.com/202004010513/92284554d8f5fcbecf96b38ea5110d13/G013/M04/06/03/rYYBAFUK15mAC2_uACRYgkGTTGw962.mp3',
+        url: 'http://m10.music.126.net/20200401054736/f4aa749d1667ec5ac7f0fa78296ab445/ymusic/f010/4927/b08e/e61080ec048decaf7f5d5aec10add2fa.mp3',
         cover: 'http://p2.music.126.net/LaVbjh4z6z5D9b5MftfX1A==/109951163597676980.jpg?param=300x300',
         lrc: '/musics/hlngs.lrc'
       },
