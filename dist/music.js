@@ -41,7 +41,7 @@ const ap = new APlayer({
         artist: 'いきものがかり',
         url: 'https://sharefs.yun.kugou.com/202004010249/b64bd12af718cd2810d46c3d945f463a/G011/M09/03/13/Sw0DAFUKv1KAOIRbADVsmVXW7Go154.mp3',
         cover: 'https://t1.picb.cc/uploads/2020/04/01/kSLVoG.jpg',
-        lrc: '/musics/LOSER.lrc'
+        lrc: '/musics/qn.lrc'
       }
     ]
 });
