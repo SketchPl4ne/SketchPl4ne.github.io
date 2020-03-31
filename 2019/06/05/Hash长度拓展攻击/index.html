@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-48x48-next.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Crypto," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言看到smi1e师傅的一篇博客，感觉挺有意思，就学习并记录了一下。 Hash算法简介Hash加密算法，又叫散列算法或者摘要算法；是一种通过单向函数加密明文生成消息摘要的算法。 常见的Hash函数有md5和sha-1，这里我们着重讲一下md5。 hash函数获得字符串输入时，需要先将消息进行分组，分组长度为512位，也就是64字节；另外加密字符串的长度需要满足M mod 512 &#x3D;&#x3D; 448，若不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hash长度拓展攻击">
+<meta property="og:url" content="https://www.sketchplane.top/2019/06/05/Hash%E9%95%BF%E5%BA%A6%E6%8B%93%E5%B1%95%E6%94%BB%E5%87%BB/index.html">
+<meta property="og:site_name" content="sketch_pl4ne">
+<meta property="og:description" content="前言看到smi1e师傅的一篇博客，感觉挺有意思，就学习并记录了一下。 Hash算法简介Hash加密算法，又叫散列算法或者摘要算法；是一种通过单向函数加密明文生成消息摘要的算法。 常见的Hash函数有md5和sha-1，这里我们着重讲一下md5。 hash函数获得字符串输入时，需要先将消息进行分组，分组长度为512位，也就是64字节；另外加密字符串的长度需要满足M mod 512 &#x3D;&#x3D; 448，若不">
+<meta property="og:image" content="https://i.loli.net/2019/06/06/5cf7fa49933ce14008.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/06/5cf7fa671546081371.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/06/5cf7fa84077d913283.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/06/5cf7fb325e2f181268.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/06/5cf7fad44ac5076019.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/06/5cf7fb4b7bee247803.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/06/5cf7fb587d88f66926.png">
+<meta property="article:published_time" content="2019-06-05T15:11:39.000Z">
+<meta property="article:modified_time" content="2019-06-06T01:09:56.475Z">
+<meta property="article:author" content="sketch_pl4ne">
+<meta property="article:tag" content="Crypto">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/06/06/5cf7fa49933ce14008.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.sketchplane.top/2019/06/05/Hash长度拓展攻击/"/>
+
+
+
+
+
+  <title>Hash长度拓展攻击 | sketch_pl4ne</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?efbba552aa6e43dbec35569bd35c0ef6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="sketch_pl4ne" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">sketch_pl4ne</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2019/06/05/Hash%E9%95%BF%E5%BA%A6%E6%8B%93%E5%B1%95%E6%94%BB%E5%87%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sketch_pl4ne">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sketch_pl4ne">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hash长度拓展攻击</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-05T23:11:39+08:00">
+                2019-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>看到smi1e师傅的一篇博客，感觉挺有意思，就学习并记录了一下。</p>
+<h2 id="Hash算法简介"><a href="#Hash算法简介" class="headerlink" title="Hash算法简介"></a>Hash算法简介</h2><p>Hash加密算法，又叫散列算法或者摘要算法；是一种通过单向函数加密明文生成消息摘要的算法。</p>
+<p>常见的Hash函数有md5和sha-1，这里我们着重讲一下md5。</p>
+<p>hash函数获得字符串输入时，需要先将消息进行分组，分组长度为512位，也就是64字节；另外加密字符串的长度需要满足<strong>M mod 512 == 448</strong>，若不满足则对分组进行<strong>字符填充</strong>，输出128位，一般转为32位的16进制表示。</p>
+<h3 id="补位"><a href="#补位" class="headerlink" title="补位"></a>补位</h3><p>前面已经说过，当需要进行消息摘要的明文长度不满足与448模512同余时，需要进行补位。这里需要注意的是：<strong>补位是必须进行的操作；即使消息长度刚好为448bit，一样需要补位，并且补位的长度为512bit</strong>。</p>
+<p>补位的方式是在消息的后面加上一个1，然后无限补0，直到满足 M mod 512 == 448。</p>
+<p>在十六进制下，我们需要在消息的后面补80，因为(hex)80 = (bin)10000000，然后一直补0，直到448位。</p>
+<p><img src="https://i.loli.net/2019/06/06/5cf7fa49933ce14008.png" alt="补位完成"></p>
+<h3 id="储存长度"><a href="#储存长度" class="headerlink" title="储存长度"></a>储存长度</h3><p>为什么补位只补到448位(即56字节)呢？<strong>因为剩下的8字节用来储存原消息的长度，单位为bit*</strong>。</p>
+<p>这里强调一点：<strong>MD5的存储方式为小端存储</strong></p>
+<p>用一句话来概括就是数据的高位字节保存在高地址，低位字节保存在低地址；</p>
+<p>相反大端存储就是数据的高位字节保存在低地址，低位字节保存在高地址。</p>
+<p>例如有一串数据为：0x12 34 56 78</p>
+<p>那么在MD5运算中的存储顺序为：0x78 56 34 12</p>
+<p>所以我在Winhex上的例子中，消息长度为17字节，136位，十六进制为<strong>88</strong>所以应该如下填充：</p>
+<p><img src="https://i.loli.net/2019/06/06/5cf7fa671546081371.png" alt="填充完成"></p>
+<p>详细了解：<a href="https://www.cnblogs.com/Alandre/p/4878841.html" target="_blank" rel="noopener">大小端存储</a></p>
+<h3 id="计算消息摘要"><a href="#计算消息摘要" class="headerlink" title="计算消息摘要"></a>计算消息摘要</h3><p>当准备工作都好了，每个分组都是512bit后，就会开始进行加密运算。</p>
+<p>加密的具体细节有点复杂，这里我只大体讲一下加密模式，以及什么情况下存在可利用点。</p>
+<p><img src="https://i.loli.net/2019/06/06/5cf7fa84077d913283.png" alt="加密流程"></p>
+<p>根据加密流程图可以发现，<strong>每一轮的加密密钥为上一轮加密后的输出</strong>(第一轮由给定的初始链变量作为密钥)， 这个我们一般称为密文链接模式。</p>
+<p>如果我们已知上一轮的加密密钥(即上一轮的hash值)，通过添加字符拓展消息长度使得MD5进行多一轮的加密运算，很容易可以得到新的hash值来绕过某些过滤。</p>
+<h2 id="Hash长度拓展攻击的实现"><a href="#Hash长度拓展攻击的实现" class="headerlink" title="Hash长度拓展攻击的实现"></a>Hash长度拓展攻击的实现</h2><p>ISCC2018的一道题目</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">"secret.php"</span>;</span><br><span class="line">@$username=(string)$_POST[<span class="string">'username'</span>]; <span class="comment">//POST传参</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">enc</span><span class="params">($text)</span></span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $key;</span><br><span class="line">    <span class="keyword">return</span> md5($key.$text);<span class="comment">//关键代码</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(enc($username) === $_COOKIE[<span class="string">'verify'</span>])&#123;<span class="comment">//要求出md5($key.$username)的hash值</span></span><br><span class="line">    <span class="keyword">if</span>(is_numeric(strpos($username, <span class="string">"admin"</span>)))&#123;<span class="comment">//传参中还要有"admin"</span></span><br><span class="line">        <span class="keyword">die</span>($flag);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">"you are not admin"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">//已知 md5($key."guest")</span></span><br><span class="line">    setcookie(<span class="string">"verify"</span>, enc(<span class="string">"guest"</span>), time()+<span class="number">60</span>*<span class="number">60</span>*<span class="number">24</span>*<span class="number">7</span>);</span><br><span class="line">    <span class="comment">//已知$key的长度</span></span><br><span class="line">    setcookie(<span class="string">"len"</span>, strlen($key), time()+<span class="number">60</span>*<span class="number">60</span>*<span class="number">24</span>*<span class="number">7</span>);</span><br><span class="line">&#125;</span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过抓包我们可以知道：</p>
+<p>md5($key.”guest”)=f8d7a112644f7e71e1e8ad068f144f61</p>
+<p>len($key)=21</p>
+<p>下面我们来进行哈希拓展长度攻击。</p>
+<h3 id="长度拓展"><a href="#长度拓展" class="headerlink" title="长度拓展"></a>长度拓展</h3><p>补位，因为$key是21字节长度，我们用21个’x’来暂时代替key的值；紧跟着的是字符串’guest’，然后根据补位方法把消息补到448bit，然后计算数据长度：hex( (21+5)*8 ) =0xD0，然后根据小端储存填充剩余位数。</p>
+<p><img src="https://i.loli.net/2019/06/06/5cf7fb325e2f181268.png" alt="补充完成"></p>
+<p>然后因为代码要求POST的值要有”admin”，我们添加一个”admin”作为拓展。</p>
+<p><img src="https://i.loli.net/2019/06/06/5cf7fad44ac5076019.png" alt="拓展完成"></p>
+<p>然后去掉前面设的x，得到最终的$username。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">guest\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xD0\x00\x00\x00\x00\x00\x00\x00admin</span><br></pre></td></tr></table></figure>
+
+<p>这里注意要把hex转换为url编码，用python将r’\x’替换成’%’即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">guest%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%d0%00%00%00%00%00%00%00admin</span><br></pre></td></tr></table></figure>
+
+<p>接下来为了让判断成立，我们计算出拓展之后的cookie为多少。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(enc($username) === $_COOKIE[<span class="string">'verify'</span>])</span><br></pre></td></tr></table></figure>
+
+<p>这里直接用hashpump可以直接跑出来.</p>
+<p><img src="https://i.loli.net/2019/06/06/5cf7fb4b7bee247803.png" alt="hashpump脚本跑出md5"></p>
+<p>得到我们需要的cookie值，即$_COOKIE[‘verify’]。</p>
+<p>这样就满足了所有条件，最后得到flag。</p>
+<p><img src="https://i.loli.net/2019/06/06/5cf7fb587d88f66926.png" alt="flag"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总的来说，hash拓展长度攻击就是在未知被加密的数据$key、但是md5()函数输入的消息长度可控、而且已知被加密的位数和相应的消息摘要，通过拓展被加密数据的长度，将原信息摘要作为密钥输入，对拓展后数据生成新的摘要，从而满足过滤条件。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Crypto/" rel="tag"># Crypto</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/03/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0-1/" rel="next" title="PHP反序列化学习">
+                <i class="fa fa-chevron-left"></i> PHP反序列化学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/02/XSS%E5%B0%8F%E6%B8%B8%E6%88%8F/" rel="prev" title="XSS小游戏">
+                XSS小游戏 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sketch_pl4ne" />
+            
+              <p class="site-author-name" itemprop="name">sketch_pl4ne</p>
+              <p class="site-description motion-element" itemprop="description">wym</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.zhaoj.in/" title="glzjin" target="_blank">glzjin</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lihuaiqiu.github.io/" title="离怀秋" target="_blank">离怀秋</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/wfzWebSecuity/" title="tr1ple" target="_blank">tr1ple</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://southsea.st/" title="南溟" target="_blank">南溟</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash算法简介"><span class="nav-number">2.</span> <span class="nav-text">Hash算法简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#补位"><span class="nav-number">2.1.</span> <span class="nav-text">补位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#储存长度"><span class="nav-number">2.2.</span> <span class="nav-text">储存长度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计算消息摘要"><span class="nav-number">2.3.</span> <span class="nav-text">计算消息摘要</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash长度拓展攻击的实现"><span class="nav-number">3.</span> <span class="nav-text">Hash长度拓展攻击的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#长度拓展"><span class="nav-number">3.1.</span> <span class="nav-text">长度拓展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sketch_pl4ne</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">36.8k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

