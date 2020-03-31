@@ -11,8 +11,8 @@ const ap = new APlayer({
       {
         name: "Lose Yourself",
         artist: 'Eminem',
-        url: 'http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_28488382&response=res&type=convert_url&',
-        //url: '/musics/LoseYourself.mp3',
+        //url: 'http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_28488382&response=res&type=convert_url&',
+        url: 'http://fdfs.xmcdn.com/group23/M04/19/15/wKgJL1hndb3gFhWcACfe-O_xX60253.mp3',
         cover: 'https://t1.picb.cc/uploads/2019/09/26/gxyvj7.th.jpg',
         lrc: '/musics/LoseYourself.lrc'
       },
