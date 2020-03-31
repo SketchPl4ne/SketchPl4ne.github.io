@@ -1,23 +1,27 @@
 const ap = new APlayer({
     container: document.getElementById('aplayer'),
-    listFolded: false,
+    listFolded: true,
     listMaxHeight: 90,
-    //fixed: true,
+    order: 'random',
+    loop: 'all',
+    fixed: false,
     autoplay: false,
     lrcType: 3,
     audio: [
-  //     {
-  //       name: "Lose Yourself",
-  //       artist: 'Eminem',
-  //       url: 'http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_28488382&response=res&type=convert_url&',
-  //       cover: 'https://t1.picb.cc/uploads/2019/09/26/gxyvj7.th.jpg'
-  //     },
-	 //  {
-		// name: "Radioactive",
-  //       artist: 'Imagine Dragons',
-  //       url: 'http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_3967148&response=res&type=convert_url&',
-  //       cover: 'https://t1.picb.cc/uploads/2019/09/26/gx2eC6.th.jpg'
-	 //  },
+      {
+        name: "Lose Yourself",
+        artist: 'Eminem',
+        url: 'http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_28488382&response=res&type=convert_url&',
+        cover: 'https://t1.picb.cc/uploads/2019/09/26/gxyvj7.th.jpg',
+        lrc: '/musics/LoseYourself.lrc'
+      },
+	  {
+		name: "Radioactive",
+        artist: 'Imagine Dragons',
+        url: 'http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_3967148&response=res&type=convert_url&',
+        cover: 'https://t1.picb.cc/uploads/2019/09/26/gx2eC6.th.jpg',
+        lrc: '/musics/Radioactive.lrc'
+	  },
       {
         name: "Lemon",
         artist: '米津玄師',
