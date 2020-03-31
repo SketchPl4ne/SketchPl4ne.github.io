@@ -63,6 +63,13 @@ const ap = new APlayer({
         url: 'https://sharefs.yun.kugou.com/202004010331/b934b1b5f3d51d90c343d52571ea9667/G035/M04/06/03/w4YBAFW2qS6ABHKkAE3VZEJcKgM172.mp3',
         cover: 'https://t1.picb.cc/uploads/2020/04/01/kSL6WN.jpg',
         lrc: '/musics/LASTSTARDUST.lrc'
+      },
+      {
+        name: "Dream It Possible",
+        artist: 'Delacey',
+        url: 'https://sharefs.yun.kugou.com/202004010348/bd9344a91682c702bb5f6b9b03cf2c44/G148/M02/13/0F/NIcBAFvJVaqAb5N6ADHXW3DSEx4595.mp3',
+        cover: 'http://p2.music.126.net/Gfq_eVuq7lgilBf0w1g5dg==/109951163088676710.jpg',
+        lrc: '/musics/DreamItPossible.lrc'
       }
     ]
 });
