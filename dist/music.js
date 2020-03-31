@@ -1,7 +1,8 @@
 const ap = new APlayer({
     container: document.getElementById('aplayer'),
-    mini: false,
-    fixed: false,
+    listFolded: false,
+    listMaxHeight: 90,
+    //fixed: true,
     autoplay: false,
     lrcType: 3,
     audio: [
@@ -26,5 +27,3 @@ const ap = new APlayer({
       }
     ]
 });
-
-//https://sharefs.yun.kugou.com/202003312113/393fa800aebac39d58f3678e4ce3ba5f/G128/M09/10/05/IIcBAFqAzN-AIIU2AD5mqrBi2UA864.mp3
