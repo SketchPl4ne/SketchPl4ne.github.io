@@ -70,6 +70,13 @@ const ap = new APlayer({
         url: 'https://sharefs.yun.kugou.com/202004010348/bd9344a91682c702bb5f6b9b03cf2c44/G148/M02/13/0F/NIcBAFvJVaqAb5N6ADHXW3DSEx4595.mp3',
         cover: 'http://p2.music.126.net/Gfq_eVuq7lgilBf0w1g5dg==/109951163088676710.jpg',
         lrc: '/musics/DreamItPossible.lrc'
+      },
+      {
+        name: "平凡之路",
+        artist: '朴树',
+        url: 'http://m10.music.126.net/20200401043548/04ab8c2a2c16b2f48d14288d159476f2/ymusic/fc6d/0a5c/db75/2b16355237283456b93e133c2d8ad6ef.mp3',
+        cover: 'http://p2.music.126.net/W_5XiCv3rGS1-J7EXpHSCQ==/18885211718782327.jpg?param=300x300',
+        lrc: '/musics/pfzl.lrc'
       }
     ]
 });
