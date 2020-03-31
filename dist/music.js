@@ -35,6 +35,13 @@ const ap = new APlayer({
         url: 'https://sharefs.yun.kugou.com/202004010242/63f77d36c4eb982e5f3e3e3f265f8ff5/G108/M0B/06/13/TJQEAFn5ZiqAXsuOADuM5IzBsC4090.mp3',
         cover: 'http://singerimg.kugou.com/uploadpic/pass/softhead/100/20190822/20190822134427228.jpg',
         lrc: '/musics/LOSER.lrc'
+      },
+      {
+        name: "ブルーバード",
+        artist: 'いきものがかり',
+        url: 'https://sharefs.yun.kugou.com/202004010249/b64bd12af718cd2810d46c3d945f463a/G011/M09/03/13/Sw0DAFUKv1KAOIRbADVsmVXW7Go154.mp3',
+        cover: 'https://t1.picb.cc/uploads/2020/04/01/kSLVoG.jpg',
+        lrc: '/musics/LOSER.lrc'
       }
     ]
 });
