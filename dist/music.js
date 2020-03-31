@@ -18,7 +18,7 @@ const ap = new APlayer({
 	  {
 		name: "Radioactive",
         artist: 'Imagine Dragons',
-        url: 'http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_3967148&response=res&type=convert_url&',
+        url: 'http://fdfs.xmcdn.com/group19/M00/7E/B9/wKgJJleoUzui-GY_ABb4fPZlJws404.mp3',
         cover: 'https://t1.picb.cc/uploads/2019/09/26/gx2eC6.th.jpg',
         lrc: '/musics/Radioactive.lrc'
 	  },
