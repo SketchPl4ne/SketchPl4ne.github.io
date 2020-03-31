@@ -56,6 +56,13 @@ const ap = new APlayer({
         url: 'https://sharefs.yun.kugou.com/202004010304/205140feb4c1aadf85d5b2f70aa248a3/G157/M07/14/03/fZQEAFytf0CAAJcUABX-NzHVU-A259.mp3',
         cover: 'https://t1.picb.cc/uploads/2020/04/01/kSLZzc.png',
         lrc: '/musics/hlh.lrc'
+      },
+      {
+        name: "LAST STARDUST",
+        artist: 'Aimer',
+        url: 'https://sharefs.yun.kugou.com/202004010331/b934b1b5f3d51d90c343d52571ea9667/G035/M04/06/03/w4YBAFW2qS6ABHKkAE3VZEJcKgM172.mp3',
+        cover: 'https://t1.picb.cc/uploads/2020/04/01/kSL6WN.jpg',
+        lrc: '/musics/LASTSTARDUST.lrc'
       }
     ]
 });
