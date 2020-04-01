@@ -81,14 +81,14 @@ const ap = new APlayer({
       {
         name: "平凡之路",
         artist: '朴树',
-        url: 'http://m10.music.126.net/20200401043548/04ab8c2a2c16b2f48d14288d159476f2/ymusic/fc6d/0a5c/db75/2b16355237283456b93e133c2d8ad6ef.mp3',
+        url: 'https://sharefs.yun.kugou.com/202004011753/8e882a9347cafab0b3863ba0b5017fec/G136/M04/1A/17/KIcBAFtSTA6AYJczAEmH61ayjB8165.mp3',
         cover: 'http://p2.music.126.net/W_5XiCv3rGS1-J7EXpHSCQ==/18885211718782327.jpg?param=300x300',
         lrc: '/musics/pfzl.lrc'
       },
       {
         name: "In The End",
         artist: 'Linkin Park',
-        url: 'http://m10.music.126.net/20200401044634/65696805985a115a5eff567c627c90f2/ymusic/9738/663e/7266/85d9aeedb1845faed53ea9aeb94ba85a.mp3',
+        url: 'http://fdfs.xmcdn.com/group64/M03/FF/F2/wKgMc11wXBXTjiADABqfMRioYdA809.mp3',
         cover: 'http://p2.music.126.net/mM5veAg4Grw6QJ-L2QMa0g==/5961552046309181.jpg?param=300x300',
         lrc: '/musics/ite.lrc'
       }
