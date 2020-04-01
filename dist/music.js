@@ -25,8 +25,8 @@ const ap = new APlayer({
       {
         name: "Lemon",
         artist: '米津玄師',
-        url: 'https://sharefs.yun.kugou.com/202003312113/393fa800aebac39d58f3678e4ce3ba5f/G128/M09/10/05/IIcBAFqAzN-AIIU2AD5mqrBi2UA864.mp3',
-        cover: 'http://singerimg.kugou.com/uploadpic/pass/softhead/100/20190822/20190822134427228.jpg',
+        url: 'http://m10.music.126.net/20200402004457/22cc6d1d512accbcf23c18558327cd43/ymusic/6eed/4ef2/d8ae/b85b958a70552f7e002e33d35075086c.mp3',
+        cover: 'http://p1.music.126.net/6IeZ9MiSSDXifj74nzH6ww==/109951163561494000.jpg',
         lrc: '/musics/Lemon.lrc'
       },
       {
@@ -74,7 +74,7 @@ const ap = new APlayer({
       {
         name: "紅蓮の弓矢",
         artist: 'Linked Horizon',
-        url: 'http://m10.music.126.net/20200401054736/f4aa749d1667ec5ac7f0fa78296ab445/ymusic/f010/4927/b08e/e61080ec048decaf7f5d5aec10add2fa.mp3',
+        url: 'http://m10.music.126.net/20200402004354/3e814453232fcd9afbf4f6bb869cbd5c/ymusic/f010/4927/b08e/e61080ec048decaf7f5d5aec10add2fa.mp3',
         cover: 'http://p2.music.126.net/LaVbjh4z6z5D9b5MftfX1A==/109951163597676980.jpg?param=300x300',
         lrc: '/musics/hlngs.lrc'
       },
@@ -88,7 +88,7 @@ const ap = new APlayer({
       {
         name: "In The End",
         artist: 'Linkin Park',
-        url: 'http://fdfs.xmcdn.com/group64/M03/FF/F2/wKgMc11wXBXTjiADABqfMRioYdA809.mp3',
+        url: 'http://m10.music.126.net/20200402004001/8cbf017910963fa063bbb7a006f09881/ymusic/9738/663e/7266/85d9aeedb1845faed53ea9aeb94ba85a.mp3',
         cover: 'http://p2.music.126.net/mM5veAg4Grw6QJ-L2QMa0g==/5961552046309181.jpg?param=300x300',
         lrc: '/musics/ite.lrc'
       }
