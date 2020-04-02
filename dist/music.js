@@ -25,7 +25,7 @@ const ap = new APlayer({
       {
         name: "Lemon",
         artist: '米津玄師',
-        url: 'http://m10.music.126.net/20200402004457/22cc6d1d512accbcf23c18558327cd43/ymusic/6eed/4ef2/d8ae/b85b958a70552f7e002e33d35075086c.mp3',
+        url: 'http://49.234.60.223/musics/Lemon.mp3',
         cover: 'http://p1.music.126.net/6IeZ9MiSSDXifj74nzH6ww==/109951163561494000.jpg',
         lrc: '/musics/Lemon.lrc'
       },
@@ -60,28 +60,28 @@ const ap = new APlayer({
       {
         name: "LAST STARDUST",
         artist: 'Aimer',
-        url: 'https://sharefs.yun.kugou.com/202004010331/b934b1b5f3d51d90c343d52571ea9667/G035/M04/06/03/w4YBAFW2qS6ABHKkAE3VZEJcKgM172.mp3',
+        url: 'http://49.234.60.223/musics/LASTSTARDUST.mp3',
         cover: 'https://t1.picb.cc/uploads/2020/04/01/kSL6WN.jpg',
         lrc: '/musics/LASTSTARDUST.lrc'
       },
       {
         name: "Dream It Possible",
         artist: 'Delacey',
-        url: 'https://sharefs.yun.kugou.com/202004010348/bd9344a91682c702bb5f6b9b03cf2c44/G148/M02/13/0F/NIcBAFvJVaqAb5N6ADHXW3DSEx4595.mp3',
+        url: 'http://49.234.60.223/musics/DreamItPossible.mp3',
         cover: 'http://p2.music.126.net/Gfq_eVuq7lgilBf0w1g5dg==/109951163088676710.jpg',
         lrc: '/musics/DreamItPossible.lrc'
       },
       {
         name: "紅蓮の弓矢",
         artist: 'Linked Horizon',
-        url: 'http://m10.music.126.net/20200402004354/3e814453232fcd9afbf4f6bb869cbd5c/ymusic/f010/4927/b08e/e61080ec048decaf7f5d5aec10add2fa.mp3',
+        url: 'http://49.234.60.223/musics/hlngs.mp3',
         cover: 'http://p2.music.126.net/LaVbjh4z6z5D9b5MftfX1A==/109951163597676980.jpg?param=300x300',
         lrc: '/musics/hlngs.lrc'
       },
       {
         name: "平凡之路",
         artist: '朴树',
-        url: 'https://sharefs.yun.kugou.com/202004011753/8e882a9347cafab0b3863ba0b5017fec/G136/M04/1A/17/KIcBAFtSTA6AYJczAEmH61ayjB8165.mp3',
+        url: 'http://49.234.60.223/musics/pfzl.mp3',
         cover: 'http://p2.music.126.net/W_5XiCv3rGS1-J7EXpHSCQ==/18885211718782327.jpg?param=300x300',
         lrc: '/musics/pfzl.lrc'
       },
