@@ -88,7 +88,7 @@ const ap = new APlayer({
       {
         name: "In The End",
         artist: 'Linkin Park',
-        url: 'http://m10.music.126.net/20200402004001/8cbf017910963fa063bbb7a006f09881/ymusic/9738/663e/7266/85d9aeedb1845faed53ea9aeb94ba85a.mp3',
+        url: 'http://49.234.60.223/musics/InTheEnd.mp3',
         cover: 'http://p2.music.126.net/mM5veAg4Grw6QJ-L2QMa0g==/5961552046309181.jpg?param=300x300',
         lrc: '/musics/ite.lrc'
       }
