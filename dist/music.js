@@ -25,7 +25,7 @@ const ap = new APlayer({
       {
         name: "Lemon",
         artist: '米津玄師',
-        url: 'http://m10.music.126.net/20200403023012/15c034c0b178fea86acab005e2e1b42c/ymusic/6eed/4ef2/d8ae/b85b958a70552f7e002e33d35075086c.mp3',
+        url: 'https://sharefs.yun.kugou.com/202004030206/b36d73069a048e12ecca93599900b6ff/G128/M09/10/05/IIcBAFqAzN-AIIU2AD5mqrBi2UA864.mp3',
         cover: 'http://p1.music.126.net/6IeZ9MiSSDXifj74nzH6ww==/109951163561494000.jpg',
         lrc: '/musics/Lemon.lrc'
       },
