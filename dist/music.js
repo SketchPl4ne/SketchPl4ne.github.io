@@ -21,7 +21,7 @@ const ap = new APlayer({
           url: 'http://fdfs.xmcdn.com/group19/M00/7E/B9/wKgJJleoUzui-GY_ABb4fPZlJws404.mp3',
           cover: 'https://t1.picb.cc/uploads/2019/09/26/gx2eC6.th.jpg',
           lrc: '/musics/Radioactive.lrc'
-  	  // },
+  	   }
      //  {
      //    name: "Lemon",
      //    artist: '米津玄師',
