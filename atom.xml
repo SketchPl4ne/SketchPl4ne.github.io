@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.sketchplane.top/"/>
-  <updated>2020-10-09T15:14:46.505Z</updated>
+  <updated>2020-10-10T15:47:00.176Z</updated>
   <id>https://www.sketchplane.top/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="https://www.sketchplane.top/2099/12/31/sketch-pl4ne%E3%81%AE%E6%97%A5%E8%AE%B0/"/>
     <id>https://www.sketchplane.top/2099/12/31/sketch-pl4ne%E3%81%AE%E6%97%A5%E8%AE%B0/</id>
     <published>2099-12-31T15:59:59.000Z</published>
-    <updated>2020-10-09T15:14:46.505Z</updated>
+    <updated>2020-10-10T15:47:00.176Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="2020-10-08"><a href="#2020-10-08" class="headerlink" title="2020-10-08"></a>2020-10-08</h2><ol><li><p>在Reeder上看到了Sakura的日记，遂抄了过来2333</p></li><li><p>在高铁上看了下ctf-wiki上的heap intro，没看太多</p></li><li><p>做了一道攻防世界的堆题并写了题解，关于在多个有限字符的堆块中写shellcode的问题（目前还有疑问</p></li></ol><h2 id="2020-10-09"><a href="#2020-10-09" class="headerlink" title="2020-10-09"></a>2020-10-09</h2><ol><li>复习了下CTF All In One 里的Linux ELF文件结构</li><li>翻了翻之前买的CTF特训营，感觉写得不是很细emm</li><li>花了一下午看ctf-wiki上关于堆的知识，硬着头皮看到漏洞利用了，感觉对萌新并不是很友好。。</li><li>晚上和实验室的师傅去吃火锅了2333</li></ol>]]></content>
+    <content type="html"><![CDATA[<h2 id="2020-10-08"><a href="#2020-10-08" class="headerlink" title="2020-10-08"></a>2020-10-08</h2><ol><li><p>在Reeder上看到了Sakura的日记，遂抄了过来2333</p></li><li><p>在高铁上看了下ctf-wiki上的heap intro，没看太多</p></li><li><p>做了一道攻防世界的堆题并写了题解，关于在多个有限字符的堆块中写shellcode的问题（目前还有疑问</p></li></ol><h2 id="2020-10-09"><a href="#2020-10-09" class="headerlink" title="2020-10-09"></a>2020-10-09</h2><ol><li>复习了下CTF All In One 里的Linux ELF文件结构</li><li>翻了翻之前买的CTF特训营，感觉写得不是很细emm</li><li>花了一下午看ctf-wiki上关于堆的知识，硬着头皮看到漏洞利用了，感觉对萌新并不是很友好。。</li><li>晚上和实验室的师傅去吃火锅了2333</li></ol><h2 id="2020-10-10"><a href="#2020-10-10" class="headerlink" title="2020-10-10"></a>2020-10-10</h2><ol><li>看了些CTF All In One的堆相关内容，比wiki友好些</li><li>照着how2heap调了下first_fit</li><li>之前花时间装ubuntu16.04的docker摸了会儿鱼（glibc 2.23）</li><li>今天又和实验室的师傅出去吃饭了。。我的钱包啊</li></ol>]]></content>
     
     <summary type="html">
     
